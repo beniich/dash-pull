@@ -34,7 +34,7 @@ export function DashboardSidebar() {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <Sidebar className="border-r border-sidebar-border">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <div className="flex h-16 items-center justify-between px-6 border-b border-sidebar-border">
         {state === "expanded" && (
           <div className="flex items-center gap-2">
