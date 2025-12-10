@@ -34,6 +34,7 @@ const Spreadsheet = lazy(() => import("./pages/Spreadsheet"));
 const DiagramEditorPage = lazy(() => import("./pages/DiagramEditorPage"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Subscriptions = lazy(() => import("./pages/Subscriptions"));
+const Checkout = lazy(() => import("./pages/Checkout"));
 
 // Configure React Query with optimizations
 const queryClient = new QueryClient({
@@ -65,6 +66,7 @@ const App = () => (
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/pricing" element={<Pricing />} />
+              <Route path="/checkout" element={<Checkout />} />
               <Route path="/products" element={<Products />} />
               <Route path="/products/:id" element={<ProductDetails />} />
 

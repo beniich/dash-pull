@@ -186,7 +186,7 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <main className="pt-24 pb-20">
         {/* Hero Section */}
         <section className="container mx-auto px-4 text-center mb-16">
@@ -240,14 +240,14 @@ export default function Pricing() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={`
                   relative rounded-2xl p-6 
-                  ${plan.highlighted 
-                    ? 'bg-primary text-primary-foreground shadow-xl scale-105 border-2 border-primary' 
+                  ${plan.highlighted
+                    ? 'bg-primary text-primary-foreground shadow-xl scale-105 border-2 border-primary'
                     : 'bg-card shadow-neu border border-border'
                   }
                 `}
               >
                 {plan.badge && (
-                  <Badge 
+                  <Badge
                     className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground"
                   >
                     {plan.badge}
@@ -296,32 +296,33 @@ export default function Pricing() {
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <Check className={`h-5 w-5 flex-shrink-0 mt-0.5 ${
-                        feature.included 
-                          ? plan.highlighted ? 'text-primary-foreground' : 'text-success'
-                          : 'text-muted-foreground/40'
-                      }`} />
-                      <span className={`text-sm ${
-                        feature.included 
-                          ? plan.highlighted ? 'text-primary-foreground' : 'text-foreground'
-                          : 'text-muted-foreground/60 line-through'
-                      }`}>
+                      <Check className={`h-5 w-5 flex-shrink-0 mt-0.5 ${feature.included
+                        ? plan.highlighted ? 'text-primary-foreground' : 'text-success'
+                        : 'text-muted-foreground/40'
+                        }`} />
+                      <span className={`text-sm ${feature.included
+                        ? plan.highlighted ? 'text-primary-foreground' : 'text-foreground'
+                        : 'text-muted-foreground/60 line-through'
+                        }`}>
                         {feature.text}
                       </span>
                     </li>
                   ))}
                 </ul>
 
-                <Button 
-                  className={`w-full group ${
-                    plan.highlighted 
-                      ? 'bg-primary-foreground text-primary hover:bg-primary-foreground/90' 
-                      : ''
-                  }`}
+                <Button
+                  className={`w-full group ${plan.highlighted
+                    ? 'bg-primary-foreground text-primary hover:bg-primary-foreground/90'
+                    : ''
+                    }`}
                   variant={plan.highlighted ? "default" : plan.ctaVariant}
                   asChild
                 >
-                  <Link to={plan.id === 'free' ? '/auth' : '/contact'}>
+                  <Link to={
+                    plan.id === 'enterprise'
+                      ? '/contact'
+                      : `/checkout?plan=${plan.id}&billing=${isAnnual ? 'yearly' : 'monthly'}`
+                  }>
                     {plan.cta}
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
@@ -416,8 +417,8 @@ export default function Pricing() {
               Notre équipe est là pour vous accompagner et trouver la solution adaptée à vos besoins industriels.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="secondary"
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
                 asChild
@@ -427,13 +428,13 @@ export default function Pricing() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="outline"
                 className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
                 asChild
               >
-                <Link to="/auth">
+                <Link to="/checkout?plan=free&billing=monthly">
                   Essayer gratuitement
                 </Link>
               </Button>
