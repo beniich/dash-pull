@@ -27,7 +27,7 @@ interface TaskListProps {
 
 const statusColors = {
   todo: "bg-yellow-500",
-  in_progress: "bg-blue-500",
+  in_progress: "bg-amber-500",
   done: "bg-green-500",
 };
 
@@ -119,9 +119,8 @@ export function TaskList({ tasks, onStatusChange, onDelete, onEdit }: TaskListPr
             {filteredTasks.map((task) => (
               <div
                 key={task.id}
-                className={`py-4 flex items-start gap-4 ${
-                  task.status === "done" ? "opacity-60" : ""
-                }`}
+                className={`py-4 flex items-start gap-4 ${task.status === "done" ? "opacity-60" : ""
+                  }`}
               >
                 <Checkbox
                   checked={task.status === "done"}
@@ -130,10 +129,9 @@ export function TaskList({ tasks, onStatusChange, onDelete, onEdit }: TaskListPr
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h4 
-                      className={`font-medium ${
-                        task.status === "done" ? "line-through" : ""
-                      }`}
+                    <h4
+                      className={`font-medium ${task.status === "done" ? "line-through" : ""
+                        }`}
                     >
                       {task.title}
                     </h4>

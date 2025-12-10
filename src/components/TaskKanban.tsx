@@ -26,7 +26,7 @@ interface TaskKanbanProps {
 
 const columns = [
   { id: "todo", title: "À faire", color: "bg-yellow-500" },
-  { id: "in_progress", title: "En cours", color: "bg-blue-500" },
+  { id: "in_progress", title: "En cours", color: "bg-amber-500" },
   { id: "done", title: "Terminé", color: "bg-green-500" },
 ];
 
@@ -73,8 +73,8 @@ function TaskCard({ task, isDragging }: { task: Task; isDragging?: boolean }) {
                 </p>
               )}
               <div className="flex items-center gap-2 mt-2">
-                <Badge 
-                  variant="secondary" 
+                <Badge
+                  variant="secondary"
                   className={`${priorityColors[task.priority]} text-white text-xs`}
                 >
                   {priorityLabels[task.priority]}
@@ -94,13 +94,13 @@ function TaskCard({ task, isDragging }: { task: Task; isDragging?: boolean }) {
   );
 }
 
-function KanbanColumn({ 
-  column, 
-  tasks, 
-  onAddTask 
-}: { 
-  column: typeof columns[0]; 
-  tasks: Task[]; 
+function KanbanColumn({
+  column,
+  tasks,
+  onAddTask
+}: {
+  column: typeof columns[0];
+  tasks: Task[];
   onAddTask: () => void;
 }) {
   return (
@@ -136,7 +136,7 @@ function KanbanColumn({
 
 export function TaskKanban({ tasks, onTaskMove, onAddTask }: TaskKanbanProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
-  
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {

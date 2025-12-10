@@ -21,7 +21,7 @@ interface TaskCalendarProps {
 
 const statusColors = {
   todo: "bg-yellow-500",
-  in_progress: "bg-blue-500",
+  in_progress: "bg-amber-500",
   done: "bg-green-500",
 };
 

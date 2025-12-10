@@ -16,7 +16,7 @@ export const RecentActivityWidget = () => {
       icon: Info,
       title: `${stats?.ai_queries ?? 0} requêtes IA`,
       description: "Historique personnel conservé",
-      color: "text-blue-500",
+      color: "text-amber-500",
       time: "Aujourd'hui",
     },
     {

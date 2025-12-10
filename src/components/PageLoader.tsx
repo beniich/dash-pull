@@ -23,11 +23,11 @@ export const PageLoader = () => {
                     }}
                     className="relative"
                 >
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/30">
+                    <div className="w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-400 rounded-2xl flex items-center justify-center shadow-2xl shadow-amber-500/30">
                         <Cloud className="w-10 h-10 text-white" />
                     </div>
                     {/* Effet de glow */}
-                    <div className="absolute inset-0 w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl blur-xl opacity-50 -z-10" />
+                    <div className="absolute inset-0 w-20 h-20 bg-gradient-to-br from-amber-500 to-orange-400 rounded-2xl blur-xl opacity-50 -z-10" />
                 </motion.div>
 
                 {/* Texte de chargement */}
@@ -50,7 +50,7 @@ export const PageLoader = () => {
                     <motion.div
                         animate={{ x: ["-100%", "100%"] }}
                         transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-                        className="h-full w-1/2 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full"
+                        className="h-full w-1/2 bg-gradient-to-r from-amber-500 to-orange-400 rounded-full"
                     />
                 </div>
             </motion.div>

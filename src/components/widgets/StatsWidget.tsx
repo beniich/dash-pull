@@ -5,7 +5,7 @@ export const StatsWidget = () => {
   const { stats } = useUserStore();
 
   const items = [
-    { icon: Brain, label: "Requêtes IA", value: stats?.ai_queries ?? 0, color: "text-blue-500" },
+    { icon: Brain, label: "Requêtes IA", value: stats?.ai_queries ?? 0, color: "text-amber-500" },
     { icon: Activity, label: "Incidents", value: stats?.total_incidents ?? 0, color: "text-orange-500" },
     { icon: Workflow, label: "Workflows", value: stats?.workflows_count ?? 0, color: "text-green-500" },
     { icon: Box, label: "Digital Twins", value: stats?.digital_twins_count ?? 0, color: "text-purple-500" },

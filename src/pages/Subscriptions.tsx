@@ -199,13 +199,13 @@ const Subscriptions = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-12"
                 >
-                    <Badge className="mb-4 bg-blue-500/10 text-blue-400 border-blue-500/20">
+                    <Badge className="mb-4 bg-amber-500/10 text-amber-400 border-amber-500/20">
                         <Sparkles className="w-3 h-3 mr-1" />
                         Configuration Cloud
                     </Badge>
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                         Créez votre{" "}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-400">
                             Serveur Cloud
                         </span>
                     </h1>
@@ -227,8 +227,8 @@ const Subscriptions = () => {
                             <div key={s.num} className="flex items-center">
                                 <div
                                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${step >= s.num
-                                            ? "bg-gradient-to-r from-blue-500 to-cyan-400 text-white"
-                                            : "bg-slate-700 text-slate-400"
+                                        ? "bg-gradient-to-r from-amber-500 to-orange-400 text-white"
+                                        : "bg-slate-700 text-slate-400"
                                         }`}
                                 >
                                     {step > s.num ? <Check className="w-5 h-5" /> : s.num}
@@ -241,7 +241,7 @@ const Subscriptions = () => {
                                 </span>
                                 {i < 3 && (
                                     <div
-                                        className={`w-12 sm:w-24 h-1 mx-2 rounded ${step > s.num ? "bg-gradient-to-r from-blue-500 to-cyan-400" : "bg-slate-700"
+                                        className={`w-12 sm:w-24 h-1 mx-2 rounded ${step > s.num ? "bg-gradient-to-r from-amber-500 to-orange-400" : "bg-slate-700"
                                             }`}
                                     />
                                 )}
@@ -256,10 +256,10 @@ const Subscriptions = () => {
                         <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
                             <CardHeader>
                                 <CardTitle className="text-white flex items-center gap-2">
-                                    {step === 1 && <><Server className="w-5 h-5 text-blue-400" /> Informations du serveur</>}
-                                    {step === 2 && <><Cpu className="w-5 h-5 text-blue-400" /> Configuration des ressources</>}
-                                    {step === 3 && <><Puzzle className="w-5 h-5 text-blue-400" /> Add-ons et services</>}
-                                    {step === 4 && <><CreditCard className="w-5 h-5 text-blue-400" /> Confirmation et paiement</>}
+                                    {step === 1 && <><Server className="w-5 h-5 text-amber-400" /> Informations du serveur</>}
+                                    {step === 2 && <><Cpu className="w-5 h-5 text-amber-400" /> Configuration des ressources</>}
+                                    {step === 3 && <><Puzzle className="w-5 h-5 text-amber-400" /> Add-ons et services</>}
+                                    {step === 4 && <><CreditCard className="w-5 h-5 text-amber-400" /> Confirmation et paiement</>}
                                 </CardTitle>
                                 <CardDescription className="text-slate-400">
                                     {step === 1 && "Définissez le nom et la description de votre serveur"}
@@ -321,10 +321,10 @@ const Subscriptions = () => {
                                                 <div className="space-y-4">
                                                     <div className="flex justify-between items-center">
                                                         <Label className="text-white flex items-center gap-2">
-                                                            <Server className="w-4 h-4 text-blue-400" />
+                                                            <Server className="w-4 h-4 text-amber-400" />
                                                             RAM
                                                         </Label>
-                                                        <Badge variant="outline" className="text-blue-400 border-blue-400/30">
+                                                        <Badge variant="outline" className="text-amber-400 border-amber-400/30">
                                                             {watchedValues.ram} GB
                                                         </Badge>
                                                     </div>
@@ -346,10 +346,10 @@ const Subscriptions = () => {
                                                 <div className="space-y-4">
                                                     <div className="flex justify-between items-center">
                                                         <Label className="text-white flex items-center gap-2">
-                                                            <Cpu className="w-4 h-4 text-blue-400" />
+                                                            <Cpu className="w-4 h-4 text-amber-400" />
                                                             CPU Cores
                                                         </Label>
-                                                        <Badge variant="outline" className="text-blue-400 border-blue-400/30">
+                                                        <Badge variant="outline" className="text-amber-400 border-amber-400/30">
                                                             {watchedValues.cpu} cores
                                                         </Badge>
                                                     </div>
@@ -371,10 +371,10 @@ const Subscriptions = () => {
                                                 <div className="space-y-4">
                                                     <div className="flex justify-between items-center">
                                                         <Label className="text-white flex items-center gap-2">
-                                                            <HardDrive className="w-4 h-4 text-blue-400" />
+                                                            <HardDrive className="w-4 h-4 text-amber-400" />
                                                             Stockage NVMe
                                                         </Label>
-                                                        <Badge variant="outline" className="text-blue-400 border-blue-400/30">
+                                                        <Badge variant="outline" className="text-amber-400 border-amber-400/30">
                                                             {watchedValues.nvme} GB
                                                         </Badge>
                                                     </div>
@@ -396,10 +396,10 @@ const Subscriptions = () => {
                                                 <div className="space-y-4">
                                                     <div className="flex justify-between items-center">
                                                         <Label className="text-white flex items-center gap-2">
-                                                            <Wifi className="w-4 h-4 text-blue-400" />
+                                                            <Wifi className="w-4 h-4 text-amber-400" />
                                                             Bande passante
                                                         </Label>
-                                                        <Badge variant="outline" className="text-blue-400 border-blue-400/30">
+                                                        <Badge variant="outline" className="text-amber-400 border-amber-400/30">
                                                             {watchedValues.bandwidth} GB/mois
                                                         </Badge>
                                                     </div>
@@ -420,7 +420,7 @@ const Subscriptions = () => {
                                                 {/* Database */}
                                                 <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
                                                     <div className="flex items-center gap-3">
-                                                        <Database className="w-5 h-5 text-blue-400" />
+                                                        <Database className="w-5 h-5 text-amber-400" />
                                                         <div>
                                                             <Label className="text-white">Base de données PostgreSQL</Label>
                                                             <p className="text-sm text-slate-400">Inclut backup automatique</p>
@@ -477,18 +477,18 @@ const Subscriptions = () => {
                                                     <div
                                                         key={addon.id}
                                                         className={`flex items-center justify-between p-4 rounded-lg border transition-all ${watchedValues[addon.id as keyof SubscriptionFormData]
-                                                                ? "bg-blue-500/10 border-blue-500/30"
-                                                                : "bg-slate-700/30 border-slate-600"
+                                                            ? "bg-amber-500/10 border-amber-500/30"
+                                                            : "bg-slate-700/30 border-slate-600"
                                                             }`}
                                                     >
                                                         <div className="flex items-center gap-3">
                                                             <div className={`p-2 rounded-lg ${watchedValues[addon.id as keyof SubscriptionFormData]
-                                                                    ? "bg-blue-500/20"
-                                                                    : "bg-slate-600/50"
+                                                                ? "bg-amber-500/20"
+                                                                : "bg-slate-600/50"
                                                                 }`}>
                                                                 <addon.icon className={`w-5 h-5 ${watchedValues[addon.id as keyof SubscriptionFormData]
-                                                                        ? "text-blue-400"
-                                                                        : "text-slate-400"
+                                                                    ? "text-amber-400"
+                                                                    : "text-slate-400"
                                                                     }`} />
                                                             </div>
                                                             <div>
@@ -563,7 +563,7 @@ const Subscriptions = () => {
                                                     </div>
                                                 </div>
 
-                                                <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg p-6 border border-blue-500/20">
+                                                <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-lg p-6 border border-amber-500/20">
                                                     <div className="flex justify-between items-center mb-2">
                                                         <span className="text-slate-300">Sous-total</span>
                                                         <span className="text-white">{calculatedPrice.subtotal.toFixed(2)}€</span>
@@ -575,7 +575,7 @@ const Subscriptions = () => {
                                                     <Separator className="bg-slate-600 my-3" />
                                                     <div className="flex justify-between items-center">
                                                         <span className="text-xl font-bold text-white">Total mensuel</span>
-                                                        <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+                                                        <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
                                                             {calculatedPrice.total.toFixed(2)}€/mois
                                                         </span>
                                                     </div>
@@ -598,7 +598,7 @@ const Subscriptions = () => {
                                         )}
 
                                         {step < 4 ? (
-                                            <Button type="button" onClick={nextStep} className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
+                                            <Button type="button" onClick={nextStep} className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
                                                 Suivant
                                                 <ArrowRight className="w-4 h-4 ml-2" />
                                             </Button>
@@ -606,7 +606,7 @@ const Subscriptions = () => {
                                             <Button
                                                 type="submit"
                                                 disabled={isSubmitting}
-                                                className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-w-40"
+                                                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 min-w-40"
                                             >
                                                 {isSubmitting ? (
                                                     <>
@@ -633,7 +633,7 @@ const Subscriptions = () => {
                             <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
                                 <CardHeader>
                                     <CardTitle className="text-white flex items-center gap-2">
-                                        <Cloud className="w-5 h-5 text-blue-400" />
+                                        <Cloud className="w-5 h-5 text-amber-400" />
                                         Estimation en temps réel
                                     </CardTitle>
                                 </CardHeader>
@@ -643,7 +643,7 @@ const Subscriptions = () => {
                                             key={calculatedPrice.total}
                                             initial={{ scale: 0.9, opacity: 0 }}
                                             animate={{ scale: 1, opacity: 1 }}
-                                            className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400"
+                                            className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400"
                                         >
                                             {calculatedPrice.total.toFixed(2)}€
                                         </motion.div>
@@ -686,7 +686,7 @@ const Subscriptions = () => {
                                         <span>Migration gratuite</span>
                                     </div>
 
-                                    <Button variant="link" className="w-full text-blue-400 hover:text-blue-300">
+                                    <Button variant="link" className="w-full text-amber-400 hover:text-amber-300">
                                         <ExternalLink className="w-4 h-4 mr-2" />
                                         Voir les détails complets
                                     </Button>
