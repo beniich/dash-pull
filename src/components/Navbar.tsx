@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Cloud, Menu, X, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,10 +41,10 @@ export const Navbar = () => {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
-    
+
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    
+
     if (outcome === 'accepted') {
       setShowInstall(false);
     }
@@ -88,6 +89,7 @@ export const Navbar = () => {
 
           {/* Actions */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
             {showInstall && (
               <Button variant="outline" size="sm" onClick={handleInstallClick} className="gap-2">
                 <Download className="h-4 w-4" />
@@ -135,9 +137,9 @@ export const Navbar = () => {
               ))}
               <div className="pt-4 border-t border-border space-y-2">
                 {showInstall && (
-                  <Button 
-                    variant="outline" 
-                    className="w-full gap-2" 
+                  <Button
+                    variant="outline"
+                    className="w-full gap-2"
                     onClick={handleInstallClick}
                   >
                     <Download className="h-4 w-4" />
@@ -151,9 +153,9 @@ export const Navbar = () => {
                         Dashboard
                       </Link>
                     </Button>
-                    <Button 
-                      variant="ghost" 
-                      className="w-full" 
+                    <Button
+                      variant="ghost"
+                      className="w-full"
                       onClick={() => {
                         handleLogout();
                         setIsOpen(false);

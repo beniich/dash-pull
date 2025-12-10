@@ -189,7 +189,7 @@ const Subscriptions = () => {
     const prevStep = () => setStep(step - 1);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="min-h-screen bg-background">
             <Navbar />
 
             <main className="container mx-auto px-4 py-12">
@@ -203,13 +203,13 @@ const Subscriptions = () => {
                         <Sparkles className="w-3 h-3 mr-1" />
                         Configuration Cloud
                     </Badge>
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                    <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
                         Créez votre{" "}
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-400">
                             Serveur Cloud
                         </span>
                     </h1>
-                    <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+                    <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                         Configurez votre infrastructure cloud sur mesure avec notre assistant intelligent.
                         Choisissez vos ressources et payez uniquement ce dont vous avez besoin.
                     </p>
@@ -227,21 +227,21 @@ const Subscriptions = () => {
                             <div key={s.num} className="flex items-center">
                                 <div
                                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${step >= s.num
-                                        ? "bg-gradient-to-r from-amber-500 to-orange-400 text-white"
-                                        : "bg-slate-700 text-slate-400"
+                                        ? "bg-gradient-to-r from-amber-500 to-orange-400 text-foreground"
+                                        : "bg-muted text-muted-foreground"
                                         }`}
                                 >
                                     {step > s.num ? <Check className="w-5 h-5" /> : s.num}
                                 </div>
                                 <span
-                                    className={`ml-2 text-sm hidden sm:block ${step >= s.num ? "text-white" : "text-slate-500"
+                                    className={`ml-2 text-sm hidden sm:block ${step >= s.num ? "text-foreground" : "text-muted-foreground"
                                         }`}
                                 >
                                     {s.label}
                                 </span>
                                 {i < 3 && (
                                     <div
-                                        className={`w-12 sm:w-24 h-1 mx-2 rounded ${step > s.num ? "bg-gradient-to-r from-amber-500 to-orange-400" : "bg-slate-700"
+                                        className={`w-12 sm:w-24 h-1 mx-2 rounded ${step > s.num ? "bg-gradient-to-r from-amber-500 to-orange-400" : "bg-muted"
                                             }`}
                                     />
                                 )}
@@ -253,15 +253,15 @@ const Subscriptions = () => {
                 <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {/* Form Section */}
                     <div className="lg:col-span-2">
-                        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
+                        <Card className="bg-card border-border backdrop-blur-xl">
                             <CardHeader>
-                                <CardTitle className="text-white flex items-center gap-2">
+                                <CardTitle className="text-foreground flex items-center gap-2">
                                     {step === 1 && <><Server className="w-5 h-5 text-amber-400" /> Informations du serveur</>}
                                     {step === 2 && <><Cpu className="w-5 h-5 text-amber-400" /> Configuration des ressources</>}
                                     {step === 3 && <><Puzzle className="w-5 h-5 text-amber-400" /> Add-ons et services</>}
                                     {step === 4 && <><CreditCard className="w-5 h-5 text-amber-400" /> Confirmation et paiement</>}
                                 </CardTitle>
-                                <CardDescription className="text-slate-400">
+                                <CardDescription className="text-muted-foreground">
                                     {step === 1 && "Définissez le nom et la description de votre serveur"}
                                     {step === 2 && "Choisissez les ressources adaptées à vos besoins"}
                                     {step === 3 && "Ajoutez des services supplémentaires"}
@@ -281,12 +281,12 @@ const Subscriptions = () => {
                                                 className="space-y-6"
                                             >
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="hostname" className="text-white">Hostname</Label>
+                                                    <Label htmlFor="hostname" className="text-foreground">Hostname</Label>
                                                     <Input
                                                         id="hostname"
                                                         {...form.register("hostname")}
                                                         placeholder="ex: mon-serveur-prod"
-                                                        className="bg-slate-700/50 border-slate-600 text-white"
+                                                        className="bg-muted/50 border-border text-foreground"
                                                     />
                                                     {form.formState.errors.hostname && (
                                                         <p className="text-red-400 text-sm">{form.formState.errors.hostname.message}</p>
@@ -294,12 +294,12 @@ const Subscriptions = () => {
                                                 </div>
 
                                                 <div className="space-y-2">
-                                                    <Label htmlFor="logo_desc" className="text-white">Description du projet</Label>
+                                                    <Label htmlFor="logo_desc" className="text-foreground">Description du projet</Label>
                                                     <Textarea
                                                         id="logo_desc"
                                                         {...form.register("logo_desc")}
                                                         placeholder="Décrivez votre projet, son utilisation et vos besoins spécifiques..."
-                                                        className="bg-slate-700/50 border-slate-600 text-white min-h-32"
+                                                        className="bg-muted/50 border-border text-foreground min-h-32"
                                                     />
                                                     {form.formState.errors.logo_desc && (
                                                         <p className="text-red-400 text-sm">{form.formState.errors.logo_desc.message}</p>
@@ -320,7 +320,7 @@ const Subscriptions = () => {
                                                 {/* RAM */}
                                                 <div className="space-y-4">
                                                     <div className="flex justify-between items-center">
-                                                        <Label className="text-white flex items-center gap-2">
+                                                        <Label className="text-foreground flex items-center gap-2">
                                                             <Server className="w-4 h-4 text-amber-400" />
                                                             RAM
                                                         </Label>
@@ -336,7 +336,7 @@ const Subscriptions = () => {
                                                         step={8}
                                                         className="py-4"
                                                     />
-                                                    <div className="flex justify-between text-xs text-slate-500">
+                                                    <div className="flex justify-between text-xs text-muted-foreground">
                                                         <span>8 GB</span>
                                                         <span>128 GB</span>
                                                     </div>
@@ -345,7 +345,7 @@ const Subscriptions = () => {
                                                 {/* CPU */}
                                                 <div className="space-y-4">
                                                     <div className="flex justify-between items-center">
-                                                        <Label className="text-white flex items-center gap-2">
+                                                        <Label className="text-foreground flex items-center gap-2">
                                                             <Cpu className="w-4 h-4 text-amber-400" />
                                                             CPU Cores
                                                         </Label>
@@ -361,7 +361,7 @@ const Subscriptions = () => {
                                                         step={2}
                                                         className="py-4"
                                                     />
-                                                    <div className="flex justify-between text-xs text-slate-500">
+                                                    <div className="flex justify-between text-xs text-muted-foreground">
                                                         <span>2 cores</span>
                                                         <span>32 cores</span>
                                                     </div>
@@ -370,7 +370,7 @@ const Subscriptions = () => {
                                                 {/* NVMe Storage */}
                                                 <div className="space-y-4">
                                                     <div className="flex justify-between items-center">
-                                                        <Label className="text-white flex items-center gap-2">
+                                                        <Label className="text-foreground flex items-center gap-2">
                                                             <HardDrive className="w-4 h-4 text-amber-400" />
                                                             Stockage NVMe
                                                         </Label>
@@ -386,7 +386,7 @@ const Subscriptions = () => {
                                                         step={50}
                                                         className="py-4"
                                                     />
-                                                    <div className="flex justify-between text-xs text-slate-500">
+                                                    <div className="flex justify-between text-xs text-muted-foreground">
                                                         <span>50 GB</span>
                                                         <span>2 TB</span>
                                                     </div>
@@ -395,7 +395,7 @@ const Subscriptions = () => {
                                                 {/* Bandwidth */}
                                                 <div className="space-y-4">
                                                     <div className="flex justify-between items-center">
-                                                        <Label className="text-white flex items-center gap-2">
+                                                        <Label className="text-foreground flex items-center gap-2">
                                                             <Wifi className="w-4 h-4 text-amber-400" />
                                                             Bande passante
                                                         </Label>
@@ -411,19 +411,19 @@ const Subscriptions = () => {
                                                         step={100}
                                                         className="py-4"
                                                     />
-                                                    <div className="flex justify-between text-xs text-slate-500">
+                                                    <div className="flex justify-between text-xs text-muted-foreground">
                                                         <span>100 GB</span>
                                                         <span>10 TB</span>
                                                     </div>
                                                 </div>
 
                                                 {/* Database */}
-                                                <div className="flex items-center justify-between p-4 bg-slate-700/30 rounded-lg">
+                                                <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg">
                                                     <div className="flex items-center gap-3">
                                                         <Database className="w-5 h-5 text-amber-400" />
                                                         <div>
-                                                            <Label className="text-white">Base de données PostgreSQL</Label>
-                                                            <p className="text-sm text-slate-400">Inclut backup automatique</p>
+                                                            <Label className="text-foreground">Base de données PostgreSQL</Label>
+                                                            <p className="text-sm text-muted-foreground">Inclut backup automatique</p>
                                                         </div>
                                                     </div>
                                                     <Switch
@@ -478,22 +478,22 @@ const Subscriptions = () => {
                                                         key={addon.id}
                                                         className={`flex items-center justify-between p-4 rounded-lg border transition-all ${watchedValues[addon.id as keyof SubscriptionFormData]
                                                             ? "bg-amber-500/10 border-amber-500/30"
-                                                            : "bg-slate-700/30 border-slate-600"
+                                                            : "bg-muted/30 border-border"
                                                             }`}
                                                     >
                                                         <div className="flex items-center gap-3">
                                                             <div className={`p-2 rounded-lg ${watchedValues[addon.id as keyof SubscriptionFormData]
                                                                 ? "bg-amber-500/20"
-                                                                : "bg-slate-600/50"
+                                                                : "bg-border/50"
                                                                 }`}>
                                                                 <addon.icon className={`w-5 h-5 ${watchedValues[addon.id as keyof SubscriptionFormData]
                                                                     ? "text-amber-400"
-                                                                    : "text-slate-400"
+                                                                    : "text-muted-foreground"
                                                                     }`} />
                                                             </div>
                                                             <div>
-                                                                <Label className="text-white">{addon.title}</Label>
-                                                                <p className="text-sm text-slate-400">{addon.desc}</p>
+                                                                <Label className="text-foreground">{addon.title}</Label>
+                                                                <p className="text-sm text-muted-foreground">{addon.desc}</p>
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-3">
@@ -502,7 +502,7 @@ const Subscriptions = () => {
                                                                     Gratuit
                                                                 </Badge>
                                                             ) : (
-                                                                <span className="text-white font-medium">{addon.price}€/mois</span>
+                                                                <span className="text-foreground font-medium">{addon.price}€/mois</span>
                                                             )}
                                                             <Switch
                                                                 checked={watchedValues[addon.id as keyof SubscriptionFormData] as boolean}
@@ -523,41 +523,41 @@ const Subscriptions = () => {
                                                 exit={{ opacity: 0, x: -20 }}
                                                 className="space-y-6"
                                             >
-                                                <div className="bg-slate-700/30 rounded-lg p-6">
-                                                    <h3 className="text-lg font-semibold text-white mb-4">Récapitulatif de votre configuration</h3>
+                                                <div className="bg-muted/30 rounded-lg p-6">
+                                                    <h3 className="text-lg font-semibold text-foreground mb-4">Récapitulatif de votre configuration</h3>
 
                                                     <div className="space-y-3">
-                                                        <div className="flex justify-between text-slate-300">
+                                                        <div className="flex justify-between text-muted-foreground">
                                                             <span>Hostname</span>
-                                                            <span className="text-white font-medium">{watchedValues.hostname || "Non défini"}</span>
+                                                            <span className="text-foreground font-medium">{watchedValues.hostname || "Non défini"}</span>
                                                         </div>
-                                                        <Separator className="bg-slate-600" />
-                                                        <div className="flex justify-between text-slate-300">
+                                                        <Separator className="bg-border" />
+                                                        <div className="flex justify-between text-muted-foreground">
                                                             <span>RAM ({watchedValues.ram} GB)</span>
-                                                            <span className="text-white">{calculatedPrice.ram.toFixed(2)}€</span>
+                                                            <span className="text-foreground">{calculatedPrice.ram.toFixed(2)}€</span>
                                                         </div>
-                                                        <div className="flex justify-between text-slate-300">
+                                                        <div className="flex justify-between text-muted-foreground">
                                                             <span>CPU ({watchedValues.cpu} cores)</span>
-                                                            <span className="text-white">{calculatedPrice.cpu.toFixed(2)}€</span>
+                                                            <span className="text-foreground">{calculatedPrice.cpu.toFixed(2)}€</span>
                                                         </div>
-                                                        <div className="flex justify-between text-slate-300">
+                                                        <div className="flex justify-between text-muted-foreground">
                                                             <span>NVMe ({watchedValues.nvme} GB)</span>
-                                                            <span className="text-white">{calculatedPrice.nvme.toFixed(2)}€</span>
+                                                            <span className="text-foreground">{calculatedPrice.nvme.toFixed(2)}€</span>
                                                         </div>
-                                                        <div className="flex justify-between text-slate-300">
+                                                        <div className="flex justify-between text-muted-foreground">
                                                             <span>Bande passante ({watchedValues.bandwidth} GB)</span>
-                                                            <span className="text-white">{calculatedPrice.bandwidth.toFixed(2)}€</span>
+                                                            <span className="text-foreground">{calculatedPrice.bandwidth.toFixed(2)}€</span>
                                                         </div>
                                                         {watchedValues.db && (
-                                                            <div className="flex justify-between text-slate-300">
+                                                            <div className="flex justify-between text-muted-foreground">
                                                                 <span>Base de données PostgreSQL</span>
-                                                                <span className="text-white">{calculatedPrice.db.toFixed(2)}€</span>
+                                                                <span className="text-foreground">{calculatedPrice.db.toFixed(2)}€</span>
                                                             </div>
                                                         )}
                                                         {calculatedPrice.addons > 0 && (
-                                                            <div className="flex justify-between text-slate-300">
+                                                            <div className="flex justify-between text-muted-foreground">
                                                                 <span>Add-ons</span>
-                                                                <span className="text-white">{calculatedPrice.addons.toFixed(2)}€</span>
+                                                                <span className="text-foreground">{calculatedPrice.addons.toFixed(2)}€</span>
                                                             </div>
                                                         )}
                                                     </div>
@@ -565,21 +565,21 @@ const Subscriptions = () => {
 
                                                 <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-lg p-6 border border-amber-500/20">
                                                     <div className="flex justify-between items-center mb-2">
-                                                        <span className="text-slate-300">Sous-total</span>
-                                                        <span className="text-white">{calculatedPrice.subtotal.toFixed(2)}€</span>
+                                                        <span className="text-muted-foreground">Sous-total</span>
+                                                        <span className="text-foreground">{calculatedPrice.subtotal.toFixed(2)}€</span>
                                                     </div>
                                                     <div className="flex justify-between items-center mb-3">
-                                                        <span className="text-slate-300">TVA (20%)</span>
-                                                        <span className="text-white">{calculatedPrice.tax.toFixed(2)}€</span>
+                                                        <span className="text-muted-foreground">TVA (20%)</span>
+                                                        <span className="text-foreground">{calculatedPrice.tax.toFixed(2)}€</span>
                                                     </div>
-                                                    <Separator className="bg-slate-600 my-3" />
+                                                    <Separator className="bg-border my-3" />
                                                     <div className="flex justify-between items-center">
-                                                        <span className="text-xl font-bold text-white">Total mensuel</span>
+                                                        <span className="text-xl font-bold text-foreground">Total mensuel</span>
                                                         <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
                                                             {calculatedPrice.total.toFixed(2)}€/mois
                                                         </span>
                                                     </div>
-                                                    <p className="text-sm text-slate-400 mt-2">
+                                                    <p className="text-sm text-muted-foreground mt-2">
                                                         ou <span className="text-green-400 font-medium">{calculatedPrice.annual.toFixed(2)}€/an</span> (économisez 15%)
                                                     </p>
                                                 </div>
@@ -590,7 +590,7 @@ const Subscriptions = () => {
                                     {/* Navigation buttons */}
                                     <div className="flex justify-between pt-6">
                                         {step > 1 ? (
-                                            <Button type="button" variant="outline" onClick={prevStep} className="border-slate-600 text-slate-300 hover:bg-slate-700">
+                                            <Button type="button" variant="outline" onClick={prevStep} className="border-border text-muted-foreground hover:bg-muted">
                                                 Précédent
                                             </Button>
                                         ) : (
@@ -630,9 +630,9 @@ const Subscriptions = () => {
                     {/* Pricing Summary Sidebar */}
                     <div className="lg:col-span-1">
                         <div className="sticky top-24">
-                            <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-xl">
+                            <Card className="bg-card border-border backdrop-blur-xl">
                                 <CardHeader>
-                                    <CardTitle className="text-white flex items-center gap-2">
+                                    <CardTitle className="text-foreground flex items-center gap-2">
                                         <Cloud className="w-5 h-5 text-amber-400" />
                                         Estimation en temps réel
                                     </CardTitle>
@@ -647,31 +647,31 @@ const Subscriptions = () => {
                                         >
                                             {calculatedPrice.total.toFixed(2)}€
                                         </motion.div>
-                                        <span className="text-slate-400">/mois TTC</span>
+                                        <span className="text-muted-foreground">/mois TTC</span>
                                     </div>
 
-                                    <Separator className="bg-slate-700" />
+                                    <Separator className="bg-muted" />
 
                                     <div className="space-y-3 text-sm">
-                                        <div className="flex justify-between text-slate-400">
+                                        <div className="flex justify-between text-muted-foreground">
                                             <span>RAM</span>
-                                            <span className="text-white">{watchedValues.ram} GB</span>
+                                            <span className="text-foreground">{watchedValues.ram} GB</span>
                                         </div>
-                                        <div className="flex justify-between text-slate-400">
+                                        <div className="flex justify-between text-muted-foreground">
                                             <span>CPU</span>
-                                            <span className="text-white">{watchedValues.cpu} cores</span>
+                                            <span className="text-foreground">{watchedValues.cpu} cores</span>
                                         </div>
-                                        <div className="flex justify-between text-slate-400">
+                                        <div className="flex justify-between text-muted-foreground">
                                             <span>Stockage</span>
-                                            <span className="text-white">{watchedValues.nvme} GB NVMe</span>
+                                            <span className="text-foreground">{watchedValues.nvme} GB NVMe</span>
                                         </div>
-                                        <div className="flex justify-between text-slate-400">
+                                        <div className="flex justify-between text-muted-foreground">
                                             <span>Bande passante</span>
-                                            <span className="text-white">{watchedValues.bandwidth} GB</span>
+                                            <span className="text-foreground">{watchedValues.bandwidth} GB</span>
                                         </div>
                                     </div>
 
-                                    <Separator className="bg-slate-700" />
+                                    <Separator className="bg-muted" />
 
                                     <div className="flex items-center gap-2 text-green-400 text-sm">
                                         <Check className="w-4 h-4" />

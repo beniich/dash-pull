@@ -3,7 +3,7 @@ import { Loader2, Cloud } from "lucide-react";
 
 export const PageLoader = () => {
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div className="min-h-screen flex items-center justify-center bg-background">
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -35,18 +35,18 @@ export const PageLoader = () => {
                     <motion.h2
                         animate={{ opacity: [0.5, 1, 0.5] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
-                        className="text-xl font-semibold text-white"
+                        className="text-xl font-semibold text-foreground"
                     >
                         Cloud Industrie
                     </motion.h2>
-                    <div className="flex items-center gap-2 text-slate-400">
+                    <div className="flex items-center gap-2 text-muted-foreground">
                         <Loader2 className="w-4 h-4 animate-spin" />
                         <span className="text-sm">Chargement...</span>
                     </div>
                 </div>
 
                 {/* Barre de progression */}
-                <div className="w-48 h-1 bg-slate-700 rounded-full overflow-hidden">
+                <div className="w-48 h-1 bg-muted rounded-full overflow-hidden">
                     <motion.div
                         animate={{ x: ["-100%", "100%"] }}
                         transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
