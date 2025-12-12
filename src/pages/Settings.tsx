@@ -7,8 +7,26 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { User, Bell, Shield, Palette, Database, CreditCard } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Settings = () => {
+  const { toast } = useToast();
+
+  const handleExportData = () => {
+    toast({
+      title: "Export en cours",
+      description: "Vos données sont en cours de préparation. Vous recevrez un email une fois l'export terminé.",
+    });
+  };
+
+  const handleDeleteAccount = () => {
+    toast({
+      title: "Action impossible",
+      description: "La suppression de compte est désactivée dans cette version de démonstration.",
+      variant: "destructive",
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -20,30 +38,30 @@ const Settings = () => {
         </div>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="profile" className="gap-2">
+          <TabsList className="w-full flex flex-wrap lg:grid lg:grid-cols-6 h-auto gap-2">
+            <TabsTrigger value="profile" className="gap-2 flex-1">
               <User className="h-4 w-4" />
-              Profil
+              <span className="hidden sm:inline">Profil</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="gap-2">
+            <TabsTrigger value="notifications" className="gap-2 flex-1">
               <Bell className="h-4 w-4" />
-              Notifications
+              <span className="hidden sm:inline">Notifs</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="gap-2">
+            <TabsTrigger value="security" className="gap-2 flex-1">
               <Shield className="h-4 w-4" />
-              Sécurité
+              <span className="hidden sm:inline">Sécurité</span>
             </TabsTrigger>
-            <TabsTrigger value="integrations" className="gap-2">
+            <TabsTrigger value="integrations" className="gap-2 flex-1">
               <CreditCard className="h-4 w-4" />
-              Intégrations
+              <span className="hidden sm:inline">Intégrations</span>
             </TabsTrigger>
-            <TabsTrigger value="appearance" className="gap-2">
+            <TabsTrigger value="appearance" className="gap-2 flex-1">
               <Palette className="h-4 w-4" />
-              Apparence
+              <span className="hidden sm:inline">Apparence</span>
             </TabsTrigger>
-            <TabsTrigger value="data" className="gap-2">
+            <TabsTrigger value="data" className="gap-2 flex-1">
               <Database className="h-4 w-4" />
-              Données
+              <span className="hidden sm:inline">Données</span>
             </TabsTrigger>
           </TabsList>
 
@@ -304,7 +322,7 @@ const Settings = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     Téléchargez une copie de toutes vos données
                   </p>
-                  <Button variant="outline">Exporter les données</Button>
+                  <Button variant="outline" onClick={handleExportData}>Exporter les données</Button>
                 </div>
                 <Separator />
                 <div>
@@ -312,7 +330,7 @@ const Settings = () => {
                   <p className="text-sm text-muted-foreground mb-4">
                     Actions irréversibles sur votre compte
                   </p>
-                  <Button variant="destructive">Supprimer mon compte</Button>
+                  <Button variant="destructive" onClick={handleDeleteAccount}>Supprimer mon compte</Button>
                 </div>
               </div>
             </Card>

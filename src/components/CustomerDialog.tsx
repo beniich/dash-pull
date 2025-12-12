@@ -29,7 +29,7 @@ export function CustomerDialog({ trigger, customerId, defaultValues, onSuccess }
       <DialogTrigger asChild>
         {trigger}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {customerId ? "Modifier le client" : "Nouveau client"}

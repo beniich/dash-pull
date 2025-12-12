@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Trash2, Save, Download, Upload, ArrowUpDown } from "lucide-react";
+import { Plus, Trash2, Save, Download, Upload, ArrowUpDown, Database } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export interface Column {
@@ -198,6 +198,7 @@ export function InteractiveSpreadsheet({
             <Button variant="neumorphism" size="sm" onClick={addRow}>
               <Plus className="h-4 w-4 mr-1" /> Ligne
             </Button>
+
             <label>
               <Button variant="neumorphism" size="sm" asChild>
                 <span>
@@ -211,6 +212,61 @@ export function InteractiveSpreadsheet({
                 className="hidden"
               />
             </label>
+
+            <Button variant="neumorphism" size="sm" onClick={async () => {
+              const token = localStorage.getItem("google_access_token");
+              if (!token) {
+                window.location.href = "http://localhost:3000/integrations/auth/google";
+                return;
+              }
+
+              toast({ title: "Chargement...", description: "Récupération des données Google Sheets..." });
+
+              try {
+                // Fetch from our backend which proxies to Google
+                const response = await fetch(`http://localhost:3000/integrations/google/sheets?token=${token}`);
+                const data = await response.json();
+
+                if (data.values && data.values.length > 0) {
+                  const headers = data.values[0];
+                  const newCols = headers.map((h: string, i: number) => ({ id: `g-col-${i}`, name: h, type: 'text' as const }));
+                  const newRows = data.values.slice(1).map((row: string[], i: number) => ({
+                    id: `g-row-${i}`,
+                    data: row.reduce((acc: any, cell: string, idx: number) => ({ ...acc, [`g-col-${idx}`]: cell }), {})
+                  }));
+
+                  setColumns(newCols);
+                  setRows(newRows);
+                  toast({ title: "Import réussi", description: "Données Google Sheets chargées." });
+                }
+              } catch (error) {
+                console.error("Google Import Error", error);
+                toast({ title: "Erreur", description: "Impossible de charger le Sheet.", variant: "destructive" });
+              }
+            }}>
+              <svg className="h-4 w-4 mr-1 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M14 0H4.8C3.8 0 3 .8 3 1.8V22c0 1 .8 1.8 1.8 1.8H19c1 0 1.8-.8 1.8-1.8V7L14 0zM12 18H6v-2h6v2zm6-4H6v-2h12v2zm0-4H6V8h12v2z" />
+              </svg>
+              {localStorage.getItem("google_access_token") ? "Importer Sheet" : "Connecter Google"}
+            </Button>
+
+            <Button variant="neumorphism" size="sm" onClick={() => {
+              setColumns([
+                { id: "col-crm-1", name: "Compagnie", type: "text" },
+                { id: "col-crm-2", name: "Contact", type: "text" },
+                { id: "col-crm-3", name: "Status", type: "text" },
+                { id: "col-crm-4", name: "Valeur", type: "number" }
+              ]);
+              setRows([
+                { id: "row-crm-1", data: { "col-crm-1": "Tech Solutions", "col-crm-2": "Jean Dupont", "col-crm-3": "Active", "col-crm-4": "15000" } },
+                { id: "row-crm-2", data: { "col-crm-1": "Innovation Labs", "col-crm-2": "Marie Curie", "col-crm-3": "Prospect", "col-crm-4": "5000" } },
+              ]);
+              toast({ title: "Données importées", description: "Données CRM chargées depuis la vue d'ensemble." });
+            }}>
+              <Database className="h-4 w-4 mr-1 text-blue-500" />
+              Données CRM
+            </Button>
+
             <Button variant="neumorphism" size="sm" onClick={exportToCSV}>
               <Download className="h-4 w-4 mr-1" /> Exporter
             </Button>

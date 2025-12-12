@@ -22,6 +22,19 @@ const Spreadsheet = () => {
 
     checkAuth();
 
+    // Check for Google OAuth token
+    const params = new URLSearchParams(window.location.search);
+    const googleToken = params.get("google_token");
+    if (googleToken) {
+      localStorage.setItem("google_access_token", googleToken);
+      toast({
+        title: "Compte Google connecté",
+        description: "Vous pouvez maintenant importer vos Sheets.",
+      });
+      // Remove query param without reload
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (!session) {
         navigate("/auth");
@@ -29,7 +42,7 @@ const Spreadsheet = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, toast]);
 
   const handleSave = (columns: Column[], rows: Row[]) => {
     // For now, save to localStorage
