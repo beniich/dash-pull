@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,12 +8,45 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+interface RevenueData {
+  month: string;
+  revenue: number;
+  deals: number;
+}
+
+interface TopProduct {
+  name: string;
+  value: number;
+  quantity: number;
+}
+
+interface CategoryData {
+  name: string;
+  value: number;
+  color?: string;
+}
+
+interface Sale {
+  sale_date: string;
+  total_price: number;
+}
+
+interface ProductSale {
+  product_id: string;
+  total_price: number;
+  quantity: number;
+  products: {
+    name: string;
+    category: string;
+  } | null;
+}
+
 const Analytics = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
-  const [revenueData, setRevenueData] = useState<any[]>([]);
-  const [topProducts, setTopProducts] = useState<any[]>([]);
-  const [categoryData, setCategoryData] = useState<any[]>([]);
+  const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
+  const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
   const [stats, setStats] = useState({
     totalRevenue: 0,
     totalDeals: 0,
@@ -21,11 +54,7 @@ const Analytics = () => {
     conversionRate: 0,
   });
 
-  useEffect(() => {
-    fetchAnalytics();
-  }, []);
-
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     try {
       // Fetch sales data for revenue by month
       const { data: salesData, error: salesError } = await supabase
@@ -35,7 +64,7 @@ const Analytics = () => {
       if (salesError) throw salesError;
 
       // Group sales by month
-      const monthlyRevenue = salesData?.reduce((acc: any, sale) => {
+      const monthlyRevenue = (salesData as unknown as Sale[])?.reduce((acc: Record<string, RevenueData>, sale) => {
         const month = new Date(sale.sale_date).toLocaleDateString("fr-FR", {
           month: "short",
         });
@@ -45,7 +74,7 @@ const Analytics = () => {
         acc[month].revenue += Number(sale.total_price);
         acc[month].deals += 1;
         return acc;
-      }, {});
+      }, {} as Record<string, RevenueData>);
 
       setRevenueData(Object.values(monthlyRevenue || {}));
 
@@ -62,7 +91,7 @@ const Analytics = () => {
       if (productError) throw productError;
 
       // Group by product
-      const productStats = productSales?.reduce((acc: any, sale) => {
+      const productStats = (productSales as unknown as ProductSale[])?.reduce((acc: Record<string, TopProduct>, sale) => {
         const productName = sale.products?.name || "Unknown";
         if (!acc[productName]) {
           acc[productName] = { name: productName, value: 0, quantity: 0 };
@@ -70,25 +99,25 @@ const Analytics = () => {
         acc[productName].value += Number(sale.total_price);
         acc[productName].quantity += sale.quantity;
         return acc;
-      }, {});
+      }, {} as Record<string, TopProduct>);
 
       const topProductsList = Object.values(productStats || {})
-        .sort((a: any, b: any) => b.value - a.value)
+        .sort((a, b) => b.value - a.value)
         .slice(0, 5);
 
       setTopProducts(topProductsList);
 
       // Group by category
-      const categoryStats = productSales?.reduce((acc: any, sale) => {
+      const categoryStats = (productSales as unknown as ProductSale[])?.reduce((acc: Record<string, CategoryData>, sale) => {
         const category = sale.products?.category || "Autre";
         if (!acc[category]) {
           acc[category] = { name: category, value: 0 };
         }
         acc[category].value += Number(sale.total_price);
         return acc;
-      }, {});
+      }, {} as Record<string, CategoryData>);
 
-      const categoryList = Object.values(categoryStats || {}).map((item: any, index) => ({
+      const categoryList = Object.values(categoryStats || {}).map((item, index) => ({
         ...item,
         color: ["#8B5CF6", "#F59E0B", "#3B82F6", "#10B981", "#22C55E"][index % 5],
       }));
@@ -96,18 +125,19 @@ const Analytics = () => {
       setCategoryData(categoryList);
 
       // Calculate overall stats
-      const totalRevenue = salesData?.reduce((sum, sale) => sum + Number(sale.total_price), 0) || 0;
-      
+      const totalRevenue = (salesData as unknown as Sale[])?.reduce((sum, sale) => sum + Number(sale.total_price), 0) || 0;
+
       const { data: dealsData } = await supabase
         .from("deals")
         .select("id, stage");
-      
+
       const { data: customersData } = await supabase
         .from("customers")
         .select("id");
 
       const totalDeals = dealsData?.length || 0;
-      const wonDeals = dealsData?.filter(d => d.stage === "gagne").length || 0;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const wonDeals = (dealsData as any[])?.filter(d => d.stage === "gagne").length || 0;
       const conversionRate = totalDeals > 0 ? (wonDeals / totalDeals) * 100 : 0;
 
       setStats({
@@ -126,7 +156,13 @@ const Analytics = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, [fetchAnalytics]);
+
+
 
   const exportToPDF = () => {
     toast({

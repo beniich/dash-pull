@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ interface Recommendation {
   priority: string;
   is_read: boolean;
   created_at: string;
-  data: any;
+  data: Record<string, unknown>;
 }
 
 const AIAssistant = () => {
@@ -24,11 +24,7 @@ const AIAssistant = () => {
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
 
-  useEffect(() => {
-    fetchRecommendations();
-  }, []);
-
-  const fetchRecommendations = async () => {
+  const fetchRecommendations = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -37,11 +33,14 @@ const AIAssistant = () => {
         .from('ai_recommendations')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10);
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setRecommendations(data || []);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setRecommendations((data as any[])?.slice(0, 10).map(item => ({
+        ...item,
+        data: item.data as Record<string, unknown>
+      })) || []);
     } catch (error) {
       console.error('Error fetching recommendations:', error);
       toast({
@@ -52,7 +51,11 @@ const AIAssistant = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, [fetchRecommendations]);
 
   const generateRecommendations = async () => {
     setGenerating(true);
@@ -67,11 +70,11 @@ const AIAssistant = () => {
       });
 
       fetchRecommendations();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error generating recommendations:', error);
       toast({
         title: "Erreur",
-        description: error.message || "Impossible de générer les recommandations",
+        description: (error as Error).message || "Impossible de générer les recommandations",
         variant: "destructive",
       });
     } finally {
@@ -178,9 +181,8 @@ const AIAssistant = () => {
               return (
                 <Card
                   key={rec.id}
-                  className={`p-6 transition-all hover:shadow-md ${
-                    rec.is_read ? 'opacity-60' : ''
-                  }`}
+                  className={`p-6 transition-all hover:shadow-md ${rec.is_read ? 'opacity-60' : ''
+                    }`}
                 >
                   <div className="flex items-start gap-4">
                     <div className="p-3 rounded-lg bg-primary/10">

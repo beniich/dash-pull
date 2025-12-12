@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,14 +58,7 @@ const ProductDetails = () => {
     uniqueCustomers: 0,
   });
 
-  useEffect(() => {
-    if (id) {
-      fetchProductDetails();
-      fetchSales();
-    }
-  }, [id]);
-
-  const fetchProductDetails = async () => {
+  const fetchProductDetails = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("products")
@@ -74,7 +67,7 @@ const ProductDetails = () => {
         .single();
 
       if (error) throw error;
-      setProduct(data);
+      setProduct(data as unknown as Product);
     } catch (error) {
       console.error("Error fetching product:", error);
       toast({
@@ -83,9 +76,9 @@ const ProductDetails = () => {
         variant: "destructive",
       });
     }
-  };
+  }, [id, toast]);
 
-  const fetchSales = async () => {
+  const fetchSales = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("sales")
@@ -98,12 +91,13 @@ const ProductDetails = () => {
 
       if (error) throw error;
 
-      setSales(data || []);
+      const salesData = (data as unknown as Sale[]) || [];
+      setSales(salesData);
 
       // Calculate statistics
-      const totalSales = data?.reduce((sum, sale) => sum + sale.quantity, 0) || 0;
-      const totalRevenue = data?.reduce((sum, sale) => sum + Number(sale.total_price), 0) || 0;
-      const uniqueCustomers = new Set(data?.map(sale => sale.customer_id).filter(Boolean)).size;
+      const totalSales = salesData.reduce((sum, sale) => sum + sale.quantity, 0);
+      const totalRevenue = salesData.reduce((sum, sale) => sum + Number(sale.total_price), 0);
+      const uniqueCustomers = new Set(salesData.map(sale => sale.customers?.name).filter(Boolean)).size;
       const averagePrice = totalSales > 0 ? totalRevenue / totalSales : 0;
 
       setStats({
@@ -122,7 +116,16 @@ const ProductDetails = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, toast]);
+
+  useEffect(() => {
+    if (id) {
+      fetchProductDetails();
+      fetchSales();
+    }
+  }, [id, fetchProductDetails, fetchSales]);
+
+
 
   if (loading) {
     return (

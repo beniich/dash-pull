@@ -1,17 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { TaskKanban } from "@/components/TaskKanban";
 import { TaskCalendar } from "@/components/TaskCalendar";
 import { TaskList } from "@/components/TaskList";
 import { TaskDialog } from "@/components/TaskDialog";
+import { TaskFilters } from "@/components/TaskFilters"; // Import Filters
+import { TaskTimeline } from "@/components/TaskTimeline"; // Import Timeline
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Plus, LayoutGrid, Calendar, List } from "lucide-react";
+import { Plus, LayoutGrid, Calendar, List, Clock } from "lucide-react"; // Import Clock icon
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-interface Task {
+export interface Subtask {
+  id: string;
+  title: string;
+  completed: boolean;
+}
+
+export interface Task {
   id: string;
   title: string;
   description?: string;
@@ -19,6 +27,8 @@ interface Task {
   priority: "low" | "medium" | "high";
   due_date?: string;
   user_id: string;
+  subtasks?: Subtask[];
+  tags?: string[];
 }
 
 const Tasks = () => {
@@ -28,7 +38,35 @@ const Tasks = () => {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [user, setUser] = useState<any>(null);
+
+  // Filter States
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedPriorities, setSelectedPriorities] = useState<string[]>([]);
+
+  const fetchTasks = useCallback(async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("*")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setTasks((data as any) || []);
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: (error as Error).message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -53,28 +91,33 @@ const Tasks = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, fetchTasks]);
 
-  const fetchTasks = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from("tasks")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
+  // Derived state for available tags
+  const availableTags = useMemo(() => {
+    const tags = new Set<string>();
+    tasks.forEach(task => task.tags?.forEach(tag => tags.add(tag)));
+    return Array.from(tags).sort();
+  }, [tasks]);
 
-      if (error) throw error;
-      setTasks(data as Task[] || []);
-    } catch (error: any) {
-      toast({
-        title: "Erreur",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Filtered Tasks
+  const filteredTasks = useMemo(() => {
+    return tasks.filter(task => {
+      const matchesSearch =
+        task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.description?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesTags =
+        selectedTags.length === 0 ||
+        selectedTags.some(tag => task.tags?.includes(tag));
+
+      const matchesPriority =
+        selectedPriorities.length === 0 ||
+        selectedPriorities.includes(task.priority);
+
+      return matchesSearch && matchesTags && matchesPriority;
+    });
+  }, [tasks, searchQuery, selectedTags, selectedPriorities]);
 
   const handleTaskMove = async (taskId: string, newStatus: string) => {
     try {
@@ -85,13 +128,13 @@ const Tasks = () => {
 
       if (error) throw error;
 
-      setTasks(tasks.map(task => 
+      setTasks(tasks.map(task =>
         task.id === taskId ? { ...task, status: newStatus as Task["status"] } : task
       ));
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Erreur",
-        description: error.message,
+        description: (error as Error).message,
         variant: "destructive",
       });
     }
@@ -109,7 +152,7 @@ const Tasks = () => {
 
         if (error) throw error;
 
-        setTasks(tasks.map(task => 
+        setTasks(tasks.map(task =>
           task.id === editingTask.id ? { ...task, ...taskData } : task
         ));
         toast({ title: "Tâche mise à jour" });
@@ -122,14 +165,14 @@ const Tasks = () => {
 
         if (error) throw error;
 
-        setTasks([data as Task, ...tasks]);
+        setTasks([data as unknown as Task, ...tasks]);
         toast({ title: "Tâche créée" });
       }
       setEditingTask(null);
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Erreur",
-        description: error.message,
+        description: (error as Error).message,
         variant: "destructive",
       });
     }
@@ -146,10 +189,10 @@ const Tasks = () => {
 
       setTasks(tasks.filter(task => task.id !== taskId));
       toast({ title: "Tâche supprimée" });
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Erreur",
-        description: error.message,
+        description: (error as Error).message,
         variant: "destructive",
       });
     }
@@ -163,6 +206,24 @@ const Tasks = () => {
   const handleAddTask = () => {
     setEditingTask(null);
     setDialogOpen(true);
+  };
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+  };
+
+  const togglePriority = (priority: string) => {
+    setSelectedPriorities(prev =>
+      prev.includes(priority) ? prev.filter(p => p !== priority) : [...prev, priority]
+    );
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedTags([]);
+    setSelectedPriorities([]);
   };
 
   if (loading) {
@@ -191,6 +252,17 @@ const Tasks = () => {
           </Button>
         </div>
 
+        <TaskFilters
+          search={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedTags={selectedTags}
+          onTagToggle={toggleTag}
+          availableTags={availableTags}
+          selectedPriorities={selectedPriorities}
+          onPriorityToggle={togglePriority}
+          onClear={clearFilters}
+        />
+
         <Tabs defaultValue="kanban" className="w-full">
           <TabsList className="shadow-neu bg-background rounded-xl p-1">
             <TabsTrigger value="kanban" className="gap-2">
@@ -201,6 +273,10 @@ const Tasks = () => {
               <Calendar className="h-4 w-4" />
               Calendrier
             </TabsTrigger>
+            <TabsTrigger value="timeline" className="gap-2">
+              <Clock className="h-4 w-4" />
+              Timeline
+            </TabsTrigger>
             <TabsTrigger value="list" className="gap-2">
               <List className="h-4 w-4" />
               Liste
@@ -209,7 +285,7 @@ const Tasks = () => {
 
           <TabsContent value="kanban" className="mt-6">
             <TaskKanban
-              tasks={tasks}
+              tasks={filteredTasks}
               onTaskMove={handleTaskMove}
               onAddTask={handleAddTask}
             />
@@ -217,14 +293,21 @@ const Tasks = () => {
 
           <TabsContent value="calendar" className="mt-6">
             <TaskCalendar
-              tasks={tasks}
+              tasks={filteredTasks}
+              onTaskClick={handleEditTask}
+            />
+          </TabsContent>
+
+          <TabsContent value="timeline" className="mt-6">
+            <TaskTimeline
+              tasks={filteredTasks}
               onTaskClick={handleEditTask}
             />
           </TabsContent>
 
           <TabsContent value="list" className="mt-6">
             <TaskList
-              tasks={tasks}
+              tasks={filteredTasks}
               onStatusChange={handleTaskMove}
               onDelete={handleDeleteTask}
               onEdit={handleEditTask}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -41,11 +41,7 @@ const Products = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('products')
@@ -53,7 +49,7 @@ const Products = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setProducts(data || []);
+      setProducts(data as unknown as Product[] || []);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast({
@@ -64,7 +60,13 @@ const Products = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -218,21 +220,21 @@ const Products = () => {
                   </div>
 
                   <div className="flex gap-2 mt-4">
-                    <Button 
-                      className="flex-1" 
+                    <Button
+                      className="flex-1"
                       variant="neumorphism"
                       onClick={() => navigate(`/products/${product.id}`)}
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       Voir
                     </Button>
-                    <Button 
+                    <Button
                       variant="neumorphism"
                       onClick={() => handleEditProduct(product)}
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button 
+                    <Button
                       variant="neumorphism"
                       onClick={() => handleDeleteClick(product.id)}
                     >

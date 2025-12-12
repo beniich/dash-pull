@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { InteractiveSpreadsheet } from "@/components/InteractiveSpreadsheet";
+import { InteractiveSpreadsheet, Column, Row } from "@/components/InteractiveSpreadsheet";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -31,7 +31,7 @@ const Spreadsheet = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleSave = (columns: any[], rows: any[]) => {
+  const handleSave = (columns: Column[], rows: Row[]) => {
     // For now, save to localStorage
     // In production, you could save to Supabase
     localStorage.setItem("spreadsheet_columns", JSON.stringify(columns));

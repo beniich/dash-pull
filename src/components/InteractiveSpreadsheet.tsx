@@ -6,13 +6,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Plus, Trash2, Save, Download, Upload, ArrowUpDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-interface Column {
+export interface Column {
   id: string;
   name: string;
   type: "text" | "number" | "date";
 }
 
-interface Row {
+export interface Row {
   id: string;
   data: Record<string, string>;
 }
@@ -24,28 +24,28 @@ interface InteractiveSpreadsheetProps {
   title?: string;
 }
 
-export function InteractiveSpreadsheet({ 
-  initialColumns = [], 
-  initialRows = [], 
+export function InteractiveSpreadsheet({
+  initialColumns = [],
+  initialRows = [],
   onSave,
   title = "Tableur"
 }: InteractiveSpreadsheetProps) {
   const { toast } = useToast();
   const [columns, setColumns] = useState<Column[]>(
-    initialColumns.length > 0 
-      ? initialColumns 
+    initialColumns.length > 0
+      ? initialColumns
       : [
-          { id: "col-1", name: "Nom", type: "text" },
-          { id: "col-2", name: "Email", type: "text" },
-          { id: "col-3", name: "Valeur", type: "number" },
-        ]
+        { id: "col-1", name: "Nom", type: "text" },
+        { id: "col-2", name: "Email", type: "text" },
+        { id: "col-3", name: "Valeur", type: "number" },
+      ]
   );
   const [rows, setRows] = useState<Row[]>(
-    initialRows.length > 0 
-      ? initialRows 
+    initialRows.length > 0
+      ? initialRows
       : [
-          { id: "row-1", data: { "col-1": "", "col-2": "", "col-3": "" } },
-        ]
+        { id: "row-1", data: { "col-1": "", "col-2": "", "col-3": "" } },
+      ]
   );
   const [editingCell, setEditingCell] = useState<{ rowId: string; colId: string } | null>(null);
   const [editingHeader, setEditingHeader] = useState<string | null>(null);
@@ -82,15 +82,15 @@ export function InteractiveSpreadsheet({
   };
 
   const updateCell = (rowId: string, colId: string, value: string) => {
-    setRows(rows.map(row => 
-      row.id === rowId 
+    setRows(rows.map(row =>
+      row.id === rowId
         ? { ...row, data: { ...row.data, [colId]: value } }
         : row
     ));
   };
 
   const updateColumnName = (colId: string, name: string) => {
-    setColumns(columns.map(col => 
+    setColumns(columns.map(col =>
       col.id === colId ? { ...col, name } : col
     ));
   };
@@ -105,15 +105,15 @@ export function InteractiveSpreadsheet({
     const sortedRows = [...rows].sort((a, b) => {
       const aVal = a.data[colId] || "";
       const bVal = b.data[colId] || "";
-      
+
       const column = columns.find(c => c.id === colId);
       if (column?.type === "number") {
         const aNum = parseFloat(aVal) || 0;
         const bNum = parseFloat(bVal) || 0;
         return direction === "asc" ? aNum - bNum : bNum - aNum;
       }
-      
-      return direction === "asc" 
+
+      return direction === "asc"
         ? aVal.localeCompare(bVal)
         : bVal.localeCompare(aVal);
     });
@@ -130,17 +130,17 @@ export function InteractiveSpreadsheet({
 
   const exportToCSV = () => {
     const headers = columns.map(c => c.name).join(",");
-    const data = rows.map(row => 
+    const data = rows.map(row =>
       columns.map(col => `"${row.data[col.id] || ""}"`).join(",")
     ).join("\n");
-    
+
     const csv = `${headers}\n${data}`;
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = "export.csv";
     link.click();
-    
+
     toast({
       title: "Exporté",
       description: "Le fichier CSV a été téléchargé.",
@@ -155,7 +155,7 @@ export function InteractiveSpreadsheet({
     reader.onload = (e) => {
       const text = e.target?.result as string;
       const lines = text.split("\n").filter(line => line.trim());
-      
+
       if (lines.length === 0) return;
 
       const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ""));
@@ -176,7 +176,7 @@ export function InteractiveSpreadsheet({
 
       setColumns(newColumns);
       setRows(newRows.length > 0 ? newRows : [{ id: `row-${Date.now()}`, data: {} }]);
-      
+
       toast({
         title: "Importé",
         description: `${newRows.length} lignes importées avec succès.`,
@@ -240,7 +240,7 @@ export function InteractiveSpreadsheet({
                           variant="neumorphism"
                         />
                       ) : (
-                        <span 
+                        <span
                           onClick={() => setEditingHeader(col.id)}
                           className="cursor-pointer hover:text-primary"
                         >

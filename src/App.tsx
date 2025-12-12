@@ -35,6 +35,9 @@ const DiagramEditorPage = lazy(() => import("./pages/DiagramEditorPage"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Subscriptions = lazy(() => import("./pages/Subscriptions"));
 const Checkout = lazy(() => import("./pages/Checkout"));
+const Workflows = lazy(() => import("./pages/Workflows"));
+const WorkflowEditor = lazy(() => import("./pages/WorkflowEditor"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 // Configure React Query with optimizations
 const queryClient = new QueryClient({
@@ -83,6 +86,9 @@ const App = () => (
               <Route path="/spreadsheet" element={<ProtectedRoute><Spreadsheet /></ProtectedRoute>} />
               <Route path="/diagram-editor" element={<ProtectedRoute><DiagramEditorPage /></ProtectedRoute>} />
               <Route path="/subscriptions" element={<ProtectedRoute><Subscriptions /></ProtectedRoute>} />
+              <Route path="/workflows" element={<ProtectedRoute><Workflows /></ProtectedRoute>} />
+              <Route path="/workflows/:id" element={<ProtectedRoute><WorkflowEditor /></ProtectedRoute>} />
+              <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
               {/* Catch-all */}
               <Route path="*" element={<NotFound />} />

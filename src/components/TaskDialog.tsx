@@ -7,35 +7,34 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Plus, X, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+import { Task, Subtask } from "@/pages/Tasks";
+import { Badge } from "@/components/ui/badge";
 
-interface Task {
-  id?: string;
-  title: string;
-  description?: string;
-  status: "todo" | "in_progress" | "done";
-  priority: "low" | "medium" | "high";
-  due_date?: string;
-}
+
 
 interface TaskDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   task?: Task | null;
-  onSave: (task: Omit<Task, "id">) => void;
+  onSave: (task: Omit<Task, "id" | "user_id">) => void;
 }
 
 export function TaskDialog({ open, onOpenChange, task, onSave }: TaskDialogProps) {
-  const [formData, setFormData] = useState<Omit<Task, "id">>({
+  const [formData, setFormData] = useState<Omit<Task, "id" | "user_id">>({
     title: "",
     description: "",
     status: "todo",
     priority: "medium",
     due_date: undefined,
+    subtasks: [],
+    tags: []
   });
+  const [newTag, setNewTag] = useState("");
+  const [newSubtask, setNewSubtask] = useState("");
   const [date, setDate] = useState<Date | undefined>();
 
   useEffect(() => {
@@ -46,6 +45,8 @@ export function TaskDialog({ open, onOpenChange, task, onSave }: TaskDialogProps
         status: task.status,
         priority: task.priority,
         due_date: task.due_date,
+        subtasks: task.subtasks || [],
+        tags: task.tags || []
       });
       setDate(task.due_date ? new Date(task.due_date) : undefined);
     } else {
@@ -55,6 +56,8 @@ export function TaskDialog({ open, onOpenChange, task, onSave }: TaskDialogProps
         status: "todo",
         priority: "medium",
         due_date: undefined,
+        subtasks: [],
+        tags: []
       });
       setDate(undefined);
     }
@@ -71,7 +74,7 @@ export function TaskDialog({ open, onOpenChange, task, onSave }: TaskDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{task ? "Modifier la tâche" : "Nouvelle tâche"}</DialogTitle>
         </DialogHeader>
@@ -104,7 +107,7 @@ export function TaskDialog({ open, onOpenChange, task, onSave }: TaskDialogProps
                 <Label>Statut</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(value: "todo" | "in_progress" | "done") => 
+                  onValueChange={(value: "todo" | "in_progress" | "done") =>
                     setFormData({ ...formData, status: value })
                   }
                 >
@@ -123,7 +126,7 @@ export function TaskDialog({ open, onOpenChange, task, onSave }: TaskDialogProps
                 <Label>Priorité</Label>
                 <Select
                   value={formData.priority}
-                  onValueChange={(value: "low" | "medium" | "high") => 
+                  onValueChange={(value: "low" | "medium" | "high") =>
                     setFormData({ ...formData, priority: value })
                   }
                 >
@@ -164,6 +167,119 @@ export function TaskDialog({ open, onOpenChange, task, onSave }: TaskDialogProps
                   />
                 </PopoverContent>
               </Popover>
+            </div>
+
+            {/* Subtasks Section */}
+            <div className="space-y-3">
+              <Label>Sous-tâches</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={newSubtask}
+                  onChange={(e) => setNewSubtask(e.target.value)}
+                  placeholder="Ajouter une sous-tâche..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (newSubtask.trim()) {
+                        setFormData({
+                          ...formData,
+                          subtasks: [...(formData.subtasks || []), { id: Date.now().toString(), title: newSubtask, completed: false }]
+                        });
+                        setNewSubtask("");
+                      }
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (newSubtask.trim()) {
+                      setFormData({
+                        ...formData,
+                        subtasks: [...(formData.subtasks || []), { id: Date.now().toString(), title: newSubtask, completed: false }]
+                      });
+                      setNewSubtask("");
+                    }
+                  }}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {formData.subtasks?.map((subtask, index) => (
+                  <div key={subtask.id || index} className="flex items-center justify-between bg-muted/50 p-2 rounded text-sm">
+                    <span>{subtask.title}</span>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                      onClick={() => {
+                        const newSubtasks = [...(formData.subtasks || [])];
+                        newSubtasks.splice(index, 1);
+                        setFormData({ ...formData, subtasks: newSubtasks });
+                      }}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tags Section */}
+            <div className="space-y-3">
+              <Label>Tags</Label>
+              <div className="flex gap-2">
+                <Input
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  placeholder="Ajouter un tag..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (newTag.trim() && !formData.tags?.includes(newTag.trim())) {
+                        setFormData({
+                          ...formData,
+                          tags: [...(formData.tags || []), newTag.trim()]
+                        });
+                        setNewTag("");
+                      }
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (newTag.trim() && !formData.tags?.includes(newTag.trim())) {
+                      setFormData({
+                        ...formData,
+                        tags: [...(formData.tags || []), newTag.trim()]
+                      });
+                      setNewTag("");
+                    }
+                  }}
+                >
+                  <Tag className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {formData.tags?.map((tag, index) => (
+                  <Badge key={index} variant="secondary" className="gap-1">
+                    {tag}
+                    <X
+                      className="h-3 w-3 cursor-pointer hover:text-destructive"
+                      onClick={() => {
+                        const newTags = [...(formData.tags || [])];
+                        newTags.splice(index, 1);
+                        setFormData({ ...formData, tags: newTags });
+                      }}
+                    />
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
 

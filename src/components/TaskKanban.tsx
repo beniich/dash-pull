@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DndContext, DragOverlay, closestCorners, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragOverlay, closestCorners, PointerSensor, useSensor, useSensors, DragStartEvent, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -147,11 +147,11 @@ export function TaskKanban({ tasks, onTaskMove, onAddTask }: TaskKanbanProps) {
 
   const activeTask = activeId ? tasks.find(t => t.id === activeId) : null;
 
-  const handleDragStart = (event: any) => {
-    setActiveId(event.active.id);
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
   };
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     setActiveId(null);
 
@@ -163,14 +163,14 @@ export function TaskKanban({ tasks, onTaskMove, onAddTask }: TaskKanbanProps) {
     // Check if dropped on a column
     const targetColumn = columns.find(c => c.id === over.id);
     if (targetColumn && activeTask.status !== targetColumn.id) {
-      onTaskMove(active.id, targetColumn.id);
+      onTaskMove(String(active.id), targetColumn.id);
       return;
     }
 
     // Check if dropped on another task
     const overTask = tasks.find(t => t.id === over.id);
     if (overTask && activeTask.status !== overTask.status) {
-      onTaskMove(active.id, overTask.status);
+      onTaskMove(String(active.id), overTask.status);
     }
   };
 

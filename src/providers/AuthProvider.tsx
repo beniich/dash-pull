@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useCallback } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { supabase } from "@/integrations/supabase/client";
 import type { UserDashboard, UserStats } from "@/lib/mockData";
@@ -10,41 +10,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { setUser, setSession, setLoading, setProfile, setDashboard, setStats, clearUserData } = useUserStore();
 
-  useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-
-        // Defer data loading with setTimeout to avoid deadlock
-        if (session?.user) {
-          setTimeout(() => {
-            loadUserData(session.user.id);
-          }, 0);
-        } else {
-          clearUserData();
-          setLoading(false);
-        }
-      }
-    );
-
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-
-      if (session?.user) {
-        loadUserData(session.user.id);
-      } else {
-        setLoading(false);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const loadUserData = async (userId: string) => {
+  const loadUserData = useCallback(async (userId: string) => {
     try {
       // Fetch profile
       const { data: profileData } = await supabase
@@ -95,7 +61,41 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setProfile, setDashboard, setStats, setLoading]);
+
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+
+        // Defer data loading with setTimeout to avoid deadlock
+        if (session?.user) {
+          setTimeout(() => {
+            loadUserData(session.user.id);
+          }, 0);
+        } else {
+          clearUserData();
+          setLoading(false);
+        }
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+
+      if (session?.user) {
+        loadUserData(session.user.id);
+      } else {
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [clearUserData, loadUserData, setLoading, setSession, setUser]);
 
   return <>{children}</>;
 };

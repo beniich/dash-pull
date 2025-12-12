@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -72,6 +73,7 @@ const Checkout = () => {
 
     const [step, setStep] = useState<"auth" | "payment" | "success">("auth");
     const [loading, setLoading] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [user, setUser] = useState<any>(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -108,12 +110,12 @@ const Checkout = () => {
                 options: {
                     redirectTo: `${window.location.origin}/checkout?plan=${planId}&billing=${billingCycle}`,
                 }
-            });
+            } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
             if (error) throw error;
-        } catch (error: any) {
+        } catch (error) {
             toast({
                 title: "Erreur",
-                description: error.message,
+                description: (error as Error).message,
                 variant: "destructive",
             });
             setLoading(false);
@@ -138,7 +140,7 @@ const Checkout = () => {
                     options: {
                         emailRedirectTo: `${window.location.origin}/checkout?plan=${planId}&billing=${billingCycle}`,
                         data: { full_name: fullName },
-                    }
+                    } as any // eslint-disable-line @typescript-eslint/no-explicit-any
                 });
                 if (error) throw error;
                 toast({
@@ -146,10 +148,10 @@ const Checkout = () => {
                     description: "Vous pouvez maintenant continuer.",
                 });
             }
-        } catch (error: any) {
+        } catch (error) {
             toast({
                 title: "Erreur",
-                description: error.message,
+                description: (error as Error).message,
                 variant: "destructive",
             });
         } finally {
@@ -228,8 +230,8 @@ const Checkout = () => {
                                     </span>
                                     {i < 2 && (
                                         <div className={`w-12 h-0.5 mx-3 ${(step === "payment" && i === 0) || step === "success"
-                                                ? "bg-primary"
-                                                : "bg-muted"
+                                            ? "bg-primary"
+                                            : "bg-muted"
                                             }`} />
                                     )}
                                 </div>

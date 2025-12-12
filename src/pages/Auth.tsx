@@ -50,7 +50,7 @@ const Auth = () => {
           data: {
             full_name: fullName,
           }
-        }
+        } as any // eslint-disable-line @typescript-eslint/no-explicit-any
       });
 
       if (error) throw error;
@@ -59,10 +59,10 @@ const Auth = () => {
         title: "Compte créé !",
         description: "Vous êtes maintenant connecté.",
       });
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Erreur",
-        description: error.message,
+        description: (error as Error).message,
         variant: "destructive",
       });
     } finally {
@@ -86,10 +86,10 @@ const Auth = () => {
         title: "Connexion réussie !",
         description: "Bienvenue sur Cloud Industrie.",
       });
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Erreur de connexion",
-        description: error.message,
+        description: (error as Error).message,
         variant: "destructive",
       });
     } finally {
@@ -105,12 +105,12 @@ const Auth = () => {
         options: {
           redirectTo: `${window.location.origin}/`,
         }
-      });
+      } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
       if (error) throw error;
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Erreur",
-        description: error.message,
+        description: (error as Error).message,
         variant: "destructive",
       });
       setLoading(false);
@@ -125,12 +125,12 @@ const Auth = () => {
         options: {
           redirectTo: `${window.location.origin}/`,
         }
-      });
+      } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
       if (error) throw error;
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: "Erreur",
-        description: error.message,
+        description: (error as Error).message,
         variant: "destructive",
       });
       setLoading(false);

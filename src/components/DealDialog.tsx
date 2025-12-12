@@ -25,11 +25,21 @@ interface DealDialogProps {
   onSuccess: () => void;
 }
 
+interface Customer {
+  id: string;
+  name: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+}
+
 export const DealDialog = ({ open, onOpenChange, onSuccess }: DealDialogProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
-  const [customers, setCustomers] = useState<any[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     company_id: "",
@@ -53,7 +63,7 @@ export const DealDialog = ({ open, onOpenChange, onSuccess }: DealDialogProps) =
       .from("customers")
       .select("id, name")
       .order("name");
-    setCustomers(data || []);
+    setCustomers((data as unknown as Customer[]) || []);
   };
 
   const fetchProducts = async () => {
@@ -61,7 +71,7 @@ export const DealDialog = ({ open, onOpenChange, onSuccess }: DealDialogProps) =
       .from("products")
       .select("id, name")
       .order("name");
-    setProducts(data || []);
+    setProducts((data as unknown as Product[]) || []);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

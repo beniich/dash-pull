@@ -36,7 +36,7 @@ export const ProductDialog = ({
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Partial<Product>) => {
     setIsLoading(true);
     try {
       if (product) {

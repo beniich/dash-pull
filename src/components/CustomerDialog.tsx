@@ -12,7 +12,7 @@ import { CustomerForm } from "./CustomerForm";
 interface CustomerDialogProps {
   trigger: React.ReactNode;
   customerId?: string;
-  defaultValues?: any;
+  defaultValues?: Record<string, unknown>;
   onSuccess?: () => void;
 }
 

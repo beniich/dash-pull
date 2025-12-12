@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -43,11 +43,7 @@ export function DealsPipeline() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  useEffect(() => {
-    fetchDeals();
-  }, []);
-
-  const fetchDeals = async () => {
+  const fetchDeals = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("deals")
@@ -59,7 +55,8 @@ export function DealsPipeline() {
 
       if (error) throw error;
 
-      const formattedDeals: Deal[] = (data || []).map((deal) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const formattedDeals: Deal[] = (data as any[] || []).map((deal) => ({
         id: deal.id,
         title: deal.title,
         company: deal.customers?.name || "N/A",
@@ -81,7 +78,11 @@ export function DealsPipeline() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchDeals();
+  }, [fetchDeals]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -100,7 +101,7 @@ export function DealsPipeline() {
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (!over) {
       setActiveDeal(null);
       return;

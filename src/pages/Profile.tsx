@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
@@ -33,12 +33,7 @@ const Profile = () => {
     lastActivity: ""
   });
 
-  useEffect(() => {
-    fetchProfile();
-    fetchStats();
-  }, [id]);
-
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -47,7 +42,7 @@ const Profile = () => {
         .single();
 
       if (error) throw error;
-      setProfile(data);
+      setProfile(data as unknown as ProfileData);
     } catch (error) {
       console.error('Error fetching profile:', error);
       toast({
@@ -58,9 +53,9 @@ const Profile = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, toast]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     // Mock stats for now
     setStats({
       totalDeals: 12,
@@ -68,7 +63,14 @@ const Profile = () => {
       documents: 8,
       lastActivity: new Date().toLocaleDateString('fr-FR')
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProfile();
+    fetchStats();
+  }, [id, fetchProfile, fetchStats]);
+
+
 
   if (loading) {
     return (
@@ -105,10 +107,10 @@ const Profile = () => {
 
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-3xl font-bold text-foreground">{profile.full_name}</h1>
-                  <Badge className="bg-primary/10 text-primary">
-                    Utilisateur
-                  </Badge>
+                <h1 className="text-3xl font-bold text-foreground">{profile.full_name}</h1>
+                <Badge className="bg-primary/10 text-primary">
+                  Utilisateur
+                </Badge>
               </div>
 
               <div className="grid grid-cols-2 gap-4 mt-4">
