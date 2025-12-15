@@ -43,6 +43,10 @@ const WorkflowEditor = lazy(() => import("./pages/WorkflowEditor"));
 const Profile = lazy(() => import("./pages/Profile"));
 const UniversalPage = lazy(() => import("./pages/UniversalPage"));
 const PatientsPage = lazy(() => import("./pages/hospital/PatientsPage"));
+const BillingPage = lazy(() => import("./pages/hospital/BillingPage"));
+const SchedulePage = lazy(() => import("./pages/hospital/SchedulePage"));
+const StaffPage = lazy(() => import("./pages/hospital/StaffPage"));
+const BedManagementPage = lazy(() => import("./pages/hospital/BedManagementPage"));
 
 
 // Configure React Query with optimizations
@@ -83,12 +87,12 @@ const App = () => (
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/patients" element={<ProtectedRoute><PatientsPage /></ProtectedRoute>} />
 
-              {/* Hospital Placeholders (Using Dashboard or PatientsPage as temporary view) */}
-              <Route path="/schedule" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/staff" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/resources" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              {/* Hospital Modules (Implemented) */}
+              <Route path="/schedule" element={<ProtectedRoute><SchedulePage /></ProtectedRoute>} />
+              <Route path="/staff" element={<ProtectedRoute><StaffPage /></ProtectedRoute>} />
+              <Route path="/resources" element={<ProtectedRoute><BedManagementPage /></ProtectedRoute>} />
               <Route path="/emr" element={<ProtectedRoute><PatientsPage /></ProtectedRoute>} />
-              <Route path="/billing" element={<ProtectedRoute><FinancePage /></ProtectedRoute>} />
+              <Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
               <Route path="/reports" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
               <Route path="/security" element={<ProtectedRoute><SecurityPage /></ProtectedRoute>} />
 
