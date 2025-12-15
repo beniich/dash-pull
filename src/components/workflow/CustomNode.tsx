@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Handle, Position } from '@xyflow/react';
+import { Handle, Position, NodeProps } from '@xyflow/react';
 import { Card } from '@/components/ui/card';
 import { CreditCard, Mail, Bell, Zap, Database, FileSpreadsheet, Hash, BadgeDollarSign, Split, Clock, LayoutDashboard, ArrowRightCircle } from 'lucide-react';
 
@@ -19,8 +19,15 @@ const icons = {
     script: Database,
 };
 
-export default memo(({ data, isConnectable }: any) => {
-    const Icon = icons[data.icon as keyof typeof icons] || Zap;
+interface CustomNodeData extends Record<string, unknown> {
+    label: string;
+    icon: string;
+    description?: string;
+}
+
+export default memo(({ data, isConnectable }: NodeProps) => {
+    const nodeData = data as CustomNodeData;
+    const Icon = icons[nodeData.icon as keyof typeof icons] || Zap;
 
     return (
         <Card className="min-w-[200px] border-none shadow-neu bg-background/80 backdrop-blur-sm">
@@ -29,11 +36,11 @@ export default memo(({ data, isConnectable }: any) => {
                     <div className="p-2 rounded-lg bg-primary/10 text-primary">
                         <Icon size={16} />
                     </div>
-                    <div className="font-semibold text-sm">{data.label}</div>
+                    <div className="font-semibold text-sm">{nodeData.label}</div>
                 </div>
-                {data.description && (
+                {nodeData.description && (
                     <div className="text-xs text-muted-foreground">
-                        {data.description}
+                        {nodeData.description}
                     </div>
                 )}
             </div>

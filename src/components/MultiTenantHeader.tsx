@@ -14,6 +14,7 @@ import { Activity, Brain, Workflow, Box, LogOut, Settings, User } from "lucide-r
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const MultiTenantHeader = () => {
   const { user, profile, stats } = useUserStore();
@@ -71,6 +72,9 @@ export const MultiTenantHeader = () => {
             <span>{stats?.digital_twins_count ?? 0} twins</span>
           </div>
         </div>
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
 
         {/* User menu */}
         <DropdownMenu>

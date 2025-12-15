@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Building2, FileText, Settings, TrendingUp, Package, Sparkles, BarChart3, CheckSquare, Table, Workflow } from "lucide-react";
+import { LayoutDashboard, Users, UserPlus, CalendarDays, BedDouble, Stethoscope, Receipt, BarChart3, Settings, ShieldCheck, Activity } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
@@ -15,15 +15,15 @@ import {
 } from "@/components/ui/sidebar";
 
 const navigationItems = [
-  { title: "Vue d'ensemble", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Assistant IA", url: "/ai-assistant", icon: Sparkles },
-  { title: "Tâches", url: "/tasks", icon: CheckSquare },
-  { title: "Automatisations", url: "/workflows", icon: Workflow },
-  { title: "Tableur", url: "/spreadsheet", icon: Table },
-  { title: "Clients", url: "/companies", icon: Building2 },
-  { title: "Opportunités", url: "/deals", icon: TrendingUp },
-  { title: "Produits", url: "/products", icon: Package },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Patients", url: "/patients", icon: Users },
+  { title: "Agenda", url: "/schedule", icon: CalendarDays },
+  { title: "Personnel", url: "/staff", icon: Stethoscope },
+  { title: "Services & Lits", url: "/resources", icon: BedDouble },
+  { title: "Dossier Médical", url: "/emr", icon: Activity },
+  { title: "Facturation", url: "/billing", icon: Receipt }, // Was Finance
+  { title: "Rapports", url: "/reports", icon: BarChart3 },
+  { title: "Sécurité", url: "/security", icon: ShieldCheck },
   { title: "Paramètres", url: "/settings", icon: Settings },
 ];
 
@@ -39,8 +39,8 @@ export function DashboardSidebar() {
       <div className="flex h-16 items-center justify-between px-6 border-b border-sidebar-border">
         {state === "expanded" && (
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <TrendingUp className="h-5 w-5 text-primary-foreground" />
+            <div className="h-8 w-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
+              <TrendingUp className="h-5 w-5 text-sidebar-primary-foreground" />
             </div>
             <span className="text-lg font-semibold text-sidebar-foreground">CRM Pro</span>
           </div>

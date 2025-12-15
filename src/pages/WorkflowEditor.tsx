@@ -11,7 +11,15 @@ import {
     Edge,
     ReactFlowProvider,
     BackgroundVariant,
+    Node,
+    ReactFlowInstance,
 } from '@xyflow/react';
+
+interface CustomNodeData extends Record<string, unknown> {
+    label: string;
+    icon: string;
+    description?: string;
+}
 import '@xyflow/react/dist/style.css';
 
 import { useParams } from 'react-router-dom';
@@ -29,7 +37,7 @@ const nodeTypes = {
     custom: CustomNode,
 };
 
-const initialNodes = [
+const initialNodes: Node<CustomNodeData>[] = [
     {
         id: '1',
         type: 'custom',
@@ -54,14 +62,14 @@ const WorkflowEditorContent = () => {
 
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-    const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
-    const [selectedNode, setSelectedNode] = useState<{ id: string, data: any } | null>(null);
+    const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+    const [selectedNode, setSelectedNode] = useState<{ id: string, data: CustomNodeData } | null>(null);
     const location = useLocation();
 
     useEffect(() => {
-        const tmpl = (location.state as any)?.template;
+        const tmpl = (location.state as { template?: { nodes: { id?: string; type: string; name?: string }[] } })?.template;
         if (tmpl?.nodes) {
-            const flowNodes = tmpl.nodes.map((n: any, idx: number) => ({
+            const flowNodes = tmpl.nodes.map((n, idx: number) => ({
                 id: n.id ?? `node-${idx}`,
                 type: n.type === 'ai-node' ? 'custom' : n.type,
                 position: { x: 250 + idx * 150, y: 100 },
@@ -78,15 +86,15 @@ const WorkflowEditorContent = () => {
         }
     }, [location.state]);
 
-    const onNodeClick = useCallback((event: React.MouseEvent, node: any) => {
-        setSelectedNode({ id: node.id, data: node.data });
+    const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
+        setSelectedNode({ id: node.id, data: node.data as CustomNodeData });
     }, []);
 
     const onPaneClick = useCallback(() => {
         setSelectedNode(null);
     }, []);
 
-    const updateNodeData = (id: string, newData: any) => {
+    const updateNodeData = (id: string, newData: CustomNodeData) => {
         setNodes((nds) =>
             nds.map((node) => {
                 if (node.id === id) {
