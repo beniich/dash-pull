@@ -5,13 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Filter, FileText } from "lucide-react";
-import { mockPatients } from "@/lib/mockData";
+import { useHospitalStore } from "@/stores/useHospitalStore";
 import { useState } from "react";
+
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { PatientForm } from "@/components/patients/PatientForm";
 
 const PatientsPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const patients = useHospitalStore((state) => state.patients);
 
-    const filteredPatients = mockPatients.filter(patient =>
+    const filteredPatients = patients.filter(patient =>
         patient.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         patient.first_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -26,7 +30,7 @@ const PatientsPage = () => {
                             Gestion des Patients
                         </h1>
                         <p className="text-muted-foreground mt-1">
-                            {mockPatients.length} dossiers actifs
+                            {patients.length} dossiers actifs
                         </p>
                     </div>
                     <div className="flex gap-3">
@@ -34,10 +38,24 @@ const PatientsPage = () => {
                             <Filter className="h-4 w-4" />
                             Filtres
                         </Button>
-                        <Button className="gap-2 shadow-lg shadow-primary/20">
-                            <Plus className="h-4 w-4" />
-                            Nouveau Patient
-                        </Button>
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button className="gap-2 shadow-lg shadow-primary/20">
+                                    <Plus className="h-4 w-4" />
+                                    Nouveau Patient
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent className="min-w-[400px] md:min-w-[600px] overflow-y-auto">
+                                <SheetHeader className="mb-6">
+                                    <SheetTitle>Nouveau Dossier Patient</SheetTitle>
+                                    <SheetDescription>
+                                        Remplissez les informations ci-dessous pour créer un nouveau dossier médical.
+                                        Tous les champs marqués d'une astérisque (*) sont obligatoires.
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <PatientForm onSuccess={() => { document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'Escape' })); }} />
+                            </SheetContent>
+                        </Sheet>
                     </div>
                 </div>
 

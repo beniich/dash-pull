@@ -360,6 +360,33 @@ export interface MockBed {
     patient_id?: string;
 }
 
+
+// --- Hospital Management Mocks ---
+
+export const mockDepartments = [
+    { id: 'dept-1', name: 'Urgences', floor: 'RDC', color: 'red' },
+    { id: 'dept-2', name: 'Cardiologie', floor: 'Étage 1', color: 'blue' },
+    { id: 'dept-3', name: 'Pédiatrie', floor: 'Étage 2', color: 'green' },
+    { id: 'dept-4', name: 'Neurologie', floor: 'Étage 3', color: 'purple' },
+];
+
+export const mockHospitalBeds = [
+    // Urgences
+    { id: 'bed-u1', deptId: 'dept-1', number: 'U-01', status: 'occupied', patient: { name: 'Sophie Martin', condition: 'Stable', admissionTime: '10:30' } },
+    { id: 'bed-u2', deptId: 'dept-1', number: 'U-02', status: 'occupied', patient: { name: 'Paul Bernard', condition: 'Critique', admissionTime: '11:15' } },
+    { id: 'bed-u3', deptId: 'dept-1', number: 'U-03', status: 'available', patient: null },
+    { id: 'bed-u4', deptId: 'dept-1', number: 'U-04', status: 'cleaning', patient: null },
+
+    // Cardiologie
+    { id: 'bed-c1', deptId: 'dept-2', number: 'C-101', status: 'occupied', patient: { name: 'Jean Dubois', condition: 'Post-Op', admissionTime: 'Yesterday' } },
+    { id: 'bed-c2', deptId: 'dept-2', number: 'C-102', status: 'available', patient: null },
+    { id: 'bed-c3', deptId: 'dept-2', number: 'C-103', status: 'occupied', patient: { name: 'Marie Petit', condition: 'Observation', admissionTime: '09:00' } },
+    { id: 'bed-c4', deptId: 'dept-2', number: 'C-104', status: 'maintenance', patient: null },
+
+    // Pédiatrie
+    { id: 'bed-p1', deptId: 'dept-3', number: 'P-201', status: 'occupied', patient: { name: 'Lucas Thomas', condition: 'Fièvre', admissionTime: '08:45' } },
+    { id: 'bed-p2', deptId: 'dept-3', number: 'P-202', status: 'available', patient: null },
+];
 export const mockBeds: MockBed[] = [
     { id: "bed-101", room_number: "101", department: "Urgences", status: "occupied", patient_id: "pat-001" },
     { id: "bed-102", room_number: "101", department: "Urgences", status: "available" },

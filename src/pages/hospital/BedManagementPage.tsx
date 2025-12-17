@@ -1,31 +1,81 @@
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card, CardContent } from "@/components/ui/card";
-import { BedDouble } from "lucide-react";
+import { DepartmentGrid } from "@/components/hospital/DepartmentGrid";
+import { mockDepartments, mockHospitalBeds } from "@/lib/mockData";
+import { BedDouble, Filter, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const BedManagementPage = () => {
+    const [stats] = useState({
+        total: mockHospitalBeds.length,
+        occupied: mockHospitalBeds.filter(b => b.status === 'occupied').length,
+        available: mockHospitalBeds.filter(b => b.status === 'available').length,
+        cleaning: mockHospitalBeds.filter(b => b.status === 'cleaning').length,
+    });
+
+    const handleBedClick = (bedId: string) => {
+        toast.info(`Lit ${bedId} sélectionné`, {
+            description: "Détails du patient en cours de chargement..."
+        });
+    };
+
     return (
         <DashboardLayout>
-            <div className="space-y-6 animate-fade-in">
-                <div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                        Services & Lits
-                    </h1>
-                    <p className="text-muted-foreground mt-1">
-                        Vue temps réel de l'occupation et nettoyage des chambres.
-                    </p>
+            <div className="space-y-8 animate-fade-in pb-12">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                            Plan des Services & Lits
+                        </h1>
+                        <p className="text-muted-foreground mt-1">
+                            Vue en temps réel de l'occupation hospitalière.
+                        </p>
+                    </div>
+                    <div className="flex gap-3">
+                        <Button variant="outline" className="gap-2">
+                            <RefreshCw className="h-4 w-4" />
+                            Actualiser
+                        </Button>
+                        <Button variant="secondary" className="gap-2 bg-primary/10 hover:bg-primary/20 text-primary border-primary/20">
+                            <Filter className="h-4 w-4" />
+                            Filtrer par Étage
+                        </Button>
+                    </div>
                 </div>
 
-                <Card className="glass-card min-h-[500px] flex items-center justify-center border-dashed">
-                    <CardContent className="text-center space-y-4">
-                        <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
-                            <BedDouble className="h-8 w-8" />
+                {/* Quick Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                        { label: 'Total Lits', value: stats.total, color: 'text-foreground' },
+                        { label: 'Occupés', value: stats.occupied, color: 'text-red-500' },
+                        { label: 'Disponibles', value: stats.available, color: 'text-green-500' },
+                        { label: 'Nettoyage', value: stats.cleaning, color: 'text-yellow-500' },
+                    ].map((stat, i) => (
+                        <div key={i} className="glass-card p-4 flex flex-col items-center justify-center text-center">
+                            <span className={`text-2xl font-bold ${stat.color}`}>{stat.value}</span>
+                            <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">{stat.label}</span>
                         </div>
-                        <div>
-                            <h3 className="text-xl font-semibold">Carte des Services</h3>
-                            <p className="text-muted-foreground">La visualisation interactive des lits sera bientôt disponible ici.</p>
-                        </div>
-                    </CardContent>
-                </Card>
+                    ))}
+                </div>
+
+                {/* Departments Grid */}
+                <div className="space-y-8">
+                    {mockDepartments.map((dept) => {
+                        const deptBeds = mockHospitalBeds.filter(bed => bed.deptId === dept.id);
+                        if (deptBeds.length === 0) return null;
+
+                        return (
+                            <DepartmentGrid
+                                key={dept.id}
+                                department={dept}
+                                beds={deptBeds}
+                                onBedClick={handleBedClick}
+                            />
+                        );
+                    })}
+                </div>
             </div>
         </DashboardLayout>
     );
