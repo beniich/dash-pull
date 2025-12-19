@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { PatientForm } from "@/components/patients/PatientForm";
+import { PatientTimeline } from "@/components/patients/PatientTimeline";
 import { useState } from "react";
 
 export default function PatientDetailsPage() {
@@ -107,125 +108,133 @@ export default function PatientDetailsPage() {
 
                     {/* Main Content */}
                     <Card className="glass-card md:col-span-2 min-h-[500px]">
-                        <Tabs defaultValue="medical" className="w-full">
+                        <Tabs defaultValue="timeline" className="w-full">
                             <div className="p-4 border-b border-border/50">
-                                <TabsList className="grid w-full grid-cols-3">
+                                <TabsList className="grid w-full grid-cols-4">
+                                    <TabsTrigger value="timeline" className="gap-2"><Clock className="h-4 w-4" /> Timeline</TabsTrigger>
                                     <TabsTrigger value="medical" className="gap-2"><Activity className="h-4 w-4" /> Médical</TabsTrigger>
-                                    <TabsTrigger value="history" className="gap-2"><Clock className="h-4 w-4" /> Historique</TabsTrigger>
+                                    <TabsTrigger value="history" className="gap-2"><FileText className="h-4 w-4" /> Notes</TabsTrigger>
                                     <TabsTrigger value="admin" className="gap-2"><Shield className="h-4 w-4" /> Administratif</TabsTrigger>
                                 </TabsList>
                             </div>
 
-                            <CardContent className="p-6">
-                                <TabsContent value="medical" className="space-y-6 animate-fade-in">
-                                    <div className="space-y-2">
-                                        <h3 className="font-semibold text-lg flex items-center gap-2">
-                                            <Activity className="h-5 w-5 text-red-500" />
-                                            Motif d'Admission
-                                        </h3>
-                                        <p className="text-muted-foreground bg-red-50/50 dark:bg-red-900/10 p-4 rounded-lg border border-red-100 dark:border-red-900/20">
-                                            {patient.admissionReason || "Aucun motif spécifié."}
-                                        </p>
-                                    </div>
+                            <CardContent className="p-0">
+                                {/* TIMELINE TAB - HIL Feature */}
+                                <TabsContent value="timeline" className="m-0">
+                                    <PatientTimeline patientId={patient.id} />
+                                </TabsContent>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="p-6">
+                                    <TabsContent value="medical" className="space-y-6 animate-fade-in">
                                         <div className="space-y-2">
-                                            <h3 className="font-semibold">Diagnostic Suspecté</h3>
-                                            <div className="p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-900/20 text-blue-700 dark:text-blue-300">
-                                                {patient.diagnosis || "En cours d'évaluation"}
+                                            <h3 className="font-semibold text-lg flex items-center gap-2">
+                                                <Activity className="h-5 w-5 text-red-500" />
+                                                Motif d'Admission
+                                            </h3>
+                                            <p className="text-muted-foreground bg-red-50/50 dark:bg-red-900/10 p-4 rounded-lg border border-red-100 dark:border-red-900/20">
+                                                {patient.admissionReason || "Aucun motif spécifié."}
+                                            </p>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <h3 className="font-semibold">Diagnostic Suspecté</h3>
+                                                <div className="p-3 bg-blue-50/50 dark:bg-blue-900/10 rounded-lg border border-blue-100 dark:border-blue-900/20 text-blue-700 dark:text-blue-300">
+                                                    {patient.diagnosis || "En cours d'évaluation"}
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h3 className="font-semibold">Allergies Connues</h3>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {patient.allergies && patient.allergies.length > 0 ? (
+                                                        patient.allergies.map((allergy, i) => (
+                                                            <Badge key={i} variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-200 border-red-200">
+                                                                {allergy}
+                                                            </Badge>
+                                                        ))
+                                                    ) : (
+                                                        <span className="text-muted-foreground text-sm italic">Aucune allergie signalée</span>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="space-y-2">
-                                            <h3 className="font-semibold">Allergies Connues</h3>
-                                            <div className="flex flex-wrap gap-2">
-                                                {patient.allergies && patient.allergies.length > 0 ? (
-                                                    patient.allergies.map((allergy, i) => (
-                                                        <Badge key={i} variant="destructive" className="bg-red-100 text-red-700 hover:bg-red-200 border-red-200">
-                                                            {allergy}
-                                                        </Badge>
+
+                                        <div className="pt-4 border-t border-border/50">
+                                            <h3 className="font-semibold mb-3">Antécédents Médicaux</h3>
+                                            <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                                {patient.medicalHistory && patient.medicalHistory.length > 0 ? (
+                                                    patient.medicalHistory.map((history, i) => (
+                                                        <li key={i}>{history}</li>
                                                     ))
                                                 ) : (
-                                                    <span className="text-muted-foreground text-sm italic">Aucune allergie signalée</span>
+                                                    <li className="list-none italic">Aucun antécédent notable.</li>
                                                 )}
-                                            </div>
+                                            </ul>
                                         </div>
-                                    </div>
+                                    </TabsContent>
 
-                                    <div className="pt-4 border-t border-border/50">
-                                        <h3 className="font-semibold mb-3">Antécédents Médicaux</h3>
-                                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                                            {patient.medicalHistory && patient.medicalHistory.length > 0 ? (
-                                                patient.medicalHistory.map((history, i) => (
-                                                    <li key={i}>{history}</li>
-                                                ))
-                                            ) : (
-                                                <li className="list-none italic">Aucun antécédent notable.</li>
-                                            )}
-                                        </ul>
-                                    </div>
-                                </TabsContent>
-
-                                <TabsContent value="history" className="space-y-4 animate-fade-in">
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="font-semibold">Dernières Visites</h3>
-                                        <Button size="sm" variant="outline">Ajouter une note</Button>
-                                    </div>
-                                    <div className="space-y-4">
-                                        <div className="flex gap-4 p-4 rounded-lg bg-muted/30 border border-border/50 items-start">
-                                            <div className="bg-primary/10 p-2 rounded-full">
-                                                <FileText className="h-4 w-4 text-primary" />
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="font-semibold">Consultation Initiale</span>
-                                                    <span className="text-xs text-muted-foreground">{new Date(patient.last_visit).toLocaleDateString()}</span>
+                                    <TabsContent value="history" className="space-y-4 animate-fade-in">
+                                        <div className="flex items-center justify-between">
+                                            <h3 className="font-semibold">Dernières Visites</h3>
+                                            <Button size="sm" variant="outline">Ajouter une note</Button>
+                                        </div>
+                                        <div className="space-y-4">
+                                            <div className="flex gap-4 p-4 rounded-lg bg-muted/30 border border-border/50 items-start">
+                                                <div className="bg-primary/10 p-2 rounded-full">
+                                                    <FileText className="h-4 w-4 text-primary" />
                                                 </div>
-                                                <p className="text-sm text-muted-foreground">
-                                                    Admission du patient. Prise des constantes et installation en chambre.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        {/* Mock filler */}
-                                        <div className="flex gap-4 p-4 rounded-lg bg-muted/30 border border-border/50 items-start opacity-70">
-                                            <div className="bg-muted p-2 rounded-full">
-                                                <Activity className="h-4 w-4 text-muted-foreground" />
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="font-semibold">Prise de sang</span>
-                                                    <span className="text-xs text-muted-foreground">Il y a 2 jours</span>
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="font-semibold">Consultation Initiale</span>
+                                                        <span className="text-xs text-muted-foreground">{new Date(patient.last_visit).toLocaleDateString()}</span>
+                                                    </div>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        Admission du patient. Prise des constantes et installation en chambre.
+                                                    </p>
                                                 </div>
-                                                <p className="text-sm text-muted-foreground">
-                                                    Bilan sanguin complet effectué. Résultats en attente.
-                                                </p>
+                                            </div>
+                                            {/* Mock filler */}
+                                            <div className="flex gap-4 p-4 rounded-lg bg-muted/30 border border-border/50 items-start opacity-70">
+                                                <div className="bg-muted p-2 rounded-full">
+                                                    <Activity className="h-4 w-4 text-muted-foreground" />
+                                                </div>
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="font-semibold">Prise de sang</span>
+                                                        <span className="text-xs text-muted-foreground">Il y a 2 jours</span>
+                                                    </div>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        Bilan sanguin complet effectué. Résultats en attente.
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </TabsContent>
+                                    </TabsContent>
 
-                                <TabsContent value="admin" className="space-y-6 animate-fade-in">
-                                    <div className="grid grid-cols-2 gap-6">
-                                        <div className="space-y-2">
-                                            <span className="text-sm text-muted-foreground">Mutuelle / Assurance</span>
-                                            <div className="font-medium">{patient.insuranceProvider || "Non renseigné"}</div>
+                                    <TabsContent value="admin" className="space-y-6 animate-fade-in">
+                                        <div className="grid grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <span className="text-sm text-muted-foreground">Mutuelle / Assurance</span>
+                                                <div className="font-medium">{patient.insuranceProvider || "Non renseigné"}</div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <span className="text-sm text-muted-foreground">Médecin Traitant</span>
+                                                <div className="font-medium text-primary">Dr. House</div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <span className="text-sm text-muted-foreground">Date de Naissance</span>
+                                                <div className="font-medium">{patient.dob}</div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <span className="text-sm text-muted-foreground">Sexe</span>
+                                                <div className="font-medium">{patient.gender === 'M' ? 'Masculin' : 'Féminin'}</div>
+                                            </div>
                                         </div>
-                                        <div className="space-y-2">
-                                            <span className="text-sm text-muted-foreground">Médecin Traitant</span>
-                                            <div className="font-medium text-primary">Dr. House</div>
+                                        <div className="mt-8 pt-4 border-t border-border/50 flex justify-end">
+                                            <Button variant="destructive">Archiver le dossier</Button>
                                         </div>
-                                        <div className="space-y-2">
-                                            <span className="text-sm text-muted-foreground">Date de Naissance</span>
-                                            <div className="font-medium">{patient.dob}</div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <span className="text-sm text-muted-foreground">Sexe</span>
-                                            <div className="font-medium">{patient.gender === 'M' ? 'Masculin' : 'Féminin'}</div>
-                                        </div>
-                                    </div>
-                                    <div className="mt-8 pt-4 border-t border-border/50 flex justify-end">
-                                        <Button variant="destructive">Archiver le dossier</Button>
-                                    </div>
-                                </TabsContent>
+                                    </TabsContent>
+                                </div>
                             </CardContent>
                         </Tabs>
                     </Card>

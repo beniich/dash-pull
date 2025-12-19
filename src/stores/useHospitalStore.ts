@@ -60,12 +60,18 @@ export interface Bed {
 export interface Appointment {
     id: string | number;
     title: string;
-    type: 'surgery' | 'consultation' | 'urgent' | 'meeting' | 'google';
+    type: 'surgery' | 'consultation' | 'urgent' | 'meeting' | 'google' | 'exam' | 'followup';
     start: Date;
     duration: number; // in hours
     doctor: string; // name or id
     room: string;
     source?: 'Internal' | 'Google';
+    // HIL - Intelligent Scheduling Fields
+    patientId?: string;
+    urgency?: 'low' | 'normal' | 'high' | 'critical';
+    equipment?: string[]; // Required equipment for the appointment
+    constraints?: string[]; // Special constraints (e.g., "needs wheelchair access")
+    status?: 'scheduled' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
 }
 
 interface HospitalState {
