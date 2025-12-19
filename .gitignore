@@ -50,3 +50,6 @@ bun.lockb
 *.tgz
 .turbo
 *.tsbuildinfo
+# School Backend
+school-backend/node_modules
+school-backend/*.db
