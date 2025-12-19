@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, UserPlus, CalendarDays, BedDouble, Stethoscope, Receipt, BarChart3, Settings, ShieldCheck, Activity, TrendingUp, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Users, UserPlus, CalendarDays, BedDouble, Stethoscope, Receipt, BarChart3, Settings, ShieldCheck, Activity, TrendingUp, MessageSquare, ClipboardList } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useBrandingStore } from "@/stores/useBrandingStore";
@@ -23,6 +23,7 @@ const navigationItems = [
   { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutDashboard },
   { titleKey: "nav.patients", url: "/patients", icon: Users },
   { titleKey: "nav.agenda", url: "/schedule", icon: CalendarDays },
+  { titleKey: "nav.secretary", url: "/secretary", icon: ClipboardList },
   { titleKey: "nav.staff", url: "/staff", icon: Users },
   { titleKey: "nav.resources", url: "/resources/map", icon: BedDouble },
   { titleKey: "nav.billing", url: "/finance/invoices", icon: Receipt },

@@ -12,6 +12,8 @@ export interface Patient {
     status: 'admitted' | 'outpatient' | 'discharged';
     last_visit: string;
     diagnosis: string;
+    // Risk Score for prioritization
+    riskScore?: 'low' | 'medium' | 'high' | 'critical';
     // New Detailed Fields
     socialSecurityNumber?: string;
     phone?: string;

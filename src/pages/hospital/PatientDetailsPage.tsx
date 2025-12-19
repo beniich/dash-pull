@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { PatientForm } from "@/components/patients/PatientForm";
 import { PatientTimeline } from "@/components/patients/PatientTimeline";
 import { MedicalAIChat } from "@/components/ai/MedicalAIChat";
+import { PatientRiskBadge, calculateRiskScore } from "@/components/patients/PatientRiskBadge";
 import { usePatientTimelineStore } from "@/stores/usePatientTimelineStore";
 import { useState } from "react";
 
@@ -44,6 +45,7 @@ export default function PatientDetailsPage() {
                         <div>
                             <h1 className="text-2xl font-bold flex items-center gap-3">
                                 {patient.first_name} {patient.last_name}
+                                <PatientRiskBadge risk={patient.riskScore || calculateRiskScore(patient)} size="md" />
                                 <Badge variant={patient.status === 'admitted' ? 'default' : 'outline'}>
                                     {patient.status}
                                 </Badge>

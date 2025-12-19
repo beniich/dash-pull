@@ -52,6 +52,7 @@ const BedManagementPage = lazy(() => import("./pages/hospital/BedManagementPage"
 const PatientDetailsPage = lazy(() => import("./pages/hospital/PatientDetailsPage"));
 const ClinicMap = lazy(() => import("./pages/resources/ClinicMap"));
 const PitchPage = lazy(() => import("./pages/PitchPage"));
+const SecretaryView = lazy(() => import("./pages/secretary/SecretaryView"));
 
 
 // Configure React Query with optimizations
@@ -103,6 +104,7 @@ const App = () => (
               <Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
               <Route path="/reports" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
               <Route path="/security" element={<ProtectedRoute><SecurityPage /></ProtectedRoute>} />
+              <Route path="/secretary" element={<ProtectedRoute><SecretaryView /></ProtectedRoute>} />
 
               {/* Protected routes - Multi-tenant isolated */}
               <Route path="/crm" element={<ProtectedRoute><Index /></ProtectedRoute>} />
