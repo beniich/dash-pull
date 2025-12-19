@@ -38,8 +38,8 @@ export const PatientTimeline: React.FC<PatientTimelineProps> = ({ patientId, onA
     const allEvents = usePatientTimelineStore((state) => state.getPatientEvents(patientId));
 
     const events = filterType === 'all'
-        ? allEvents
-        : allEvents.filter(e => e.type === filterType);
+        ? (allEvents || [])
+        : (allEvents || []).filter(e => e.type === filterType);
 
     const toggleExpand = (eventId: string) => {
         setExpanded(expanded === eventId ? null : eventId);

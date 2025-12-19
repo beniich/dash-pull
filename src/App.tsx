@@ -51,6 +51,7 @@ const StaffPage = lazy(() => import("./pages/hospital/StaffPage"));
 const BedManagementPage = lazy(() => import("./pages/hospital/BedManagementPage"));
 const PatientDetailsPage = lazy(() => import("./pages/hospital/PatientDetailsPage"));
 const ClinicMap = lazy(() => import("./pages/resources/ClinicMap"));
+const PitchPage = lazy(() => import("./pages/PitchPage"));
 
 
 // Configure React Query with optimizations
@@ -86,6 +87,7 @@ const App = () => (
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/products" element={<Products />} />
               <Route path="/products/:id" element={<ProductDetails />} />
+              <Route path="/pitch" element={<PitchPage />} />
 
               {/* Core Hospital Modules */}
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

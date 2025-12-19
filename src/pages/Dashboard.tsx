@@ -4,6 +4,8 @@ import { BedOccupancyWidget } from "@/components/dashboard/hospital/BedOccupancy
 import { RecentDocuments } from "@/components/dashboard/RecentDocuments";
 import { MessagePreview } from "@/components/dashboard/MessagePreview";
 import { AdmissionsChart } from "@/components/dashboard/hospital/AdmissionsChart";
+import { AIAssistantWidget } from "@/components/dashboard/AIAssistantWidget";
+import { BedDashboard } from "@/components/beds/BedDashboard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -35,6 +37,14 @@ const Dashboard = () => {
           {/* Left Column: Admissions (Chart) & Beds */}
           <AdmissionsChart />
           <BedOccupancyWidget />
+        </div>
+
+        {/* AI & Beds Dashboard */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <AIAssistantWidget />
+          <div className="md:col-span-2">
+            <BedDashboard compact />
+          </div>
         </div>
 
         {/* Secondary Grid: Messages & Documents */}

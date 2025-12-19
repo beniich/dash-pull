@@ -65,6 +65,7 @@ export const Navbar = () => {
 
   const navLinks = [
     { to: "/", label: "Accueil" },
+    { to: "/pitch", label: "MedFlow AI" },
     { to: "/services", label: "Services" },
     { to: "/pricing", label: "Tarifs" },
     { to: "/about", label: "À propos" },

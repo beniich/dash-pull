@@ -137,13 +137,13 @@ export const usePatientTimelineStore = create<PatientTimelineState>()(
             },
 
             getPatientEvents: (patientId) => {
-                return get().events
+                return (get().events || [])
                     .filter((e) => e.patientId === patientId)
                     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
             },
 
             getEventsByType: (patientId, type) => {
-                return get().events
+                return (get().events || [])
                     .filter((e) => e.patientId === patientId && e.type === type)
                     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
             },

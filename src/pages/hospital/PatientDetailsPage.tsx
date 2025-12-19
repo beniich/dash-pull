@@ -4,12 +4,14 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, FileText, Activity, Shield, Clock, Phone, Mail, MapPin, Edit } from "lucide-react";
+import { ArrowLeft, FileText, Activity, Shield, Clock, Phone, Mail, MapPin, Edit, Bot } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { PatientForm } from "@/components/patients/PatientForm";
 import { PatientTimeline } from "@/components/patients/PatientTimeline";
+import { MedicalAIChat } from "@/components/ai/MedicalAIChat";
+import { usePatientTimelineStore } from "@/stores/usePatientTimelineStore";
 import { useState } from "react";
 
 export default function PatientDetailsPage() {
@@ -17,6 +19,7 @@ export default function PatientDetailsPage() {
     const navigate = useNavigate();
     const patient = useHospitalStore(state => state.patients.find(p => p.id === id));
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const events = usePatientTimelineStore(state => state.getPatientEvents(id || '')) || [];
 
     if (!patient) {
         return (
@@ -110,11 +113,12 @@ export default function PatientDetailsPage() {
                     <Card className="glass-card md:col-span-2 min-h-[500px]">
                         <Tabs defaultValue="timeline" className="w-full">
                             <div className="p-4 border-b border-border/50">
-                                <TabsList className="grid w-full grid-cols-4">
+                                <TabsList className="grid w-full grid-cols-5">
                                     <TabsTrigger value="timeline" className="gap-2"><Clock className="h-4 w-4" /> Timeline</TabsTrigger>
                                     <TabsTrigger value="medical" className="gap-2"><Activity className="h-4 w-4" /> Médical</TabsTrigger>
                                     <TabsTrigger value="history" className="gap-2"><FileText className="h-4 w-4" /> Notes</TabsTrigger>
-                                    <TabsTrigger value="admin" className="gap-2"><Shield className="h-4 w-4" /> Administratif</TabsTrigger>
+                                    <TabsTrigger value="admin" className="gap-2"><Shield className="h-4 w-4" /> Admin</TabsTrigger>
+                                    <TabsTrigger value="ai" className="gap-2 text-primary"><Bot className="h-4 w-4" /> IA</TabsTrigger>
                                 </TabsList>
                             </div>
 
@@ -233,6 +237,10 @@ export default function PatientDetailsPage() {
                                         <div className="mt-8 pt-4 border-t border-border/50 flex justify-end">
                                             <Button variant="destructive">Archiver le dossier</Button>
                                         </div>
+                                    </TabsContent>
+
+                                    <TabsContent value="ai" className="animate-fade-in h-[500px]">
+                                        <MedicalAIChat patient={patient} events={events} />
                                     </TabsContent>
                                 </div>
                             </CardContent>
