@@ -10,6 +10,7 @@ import AttendanceModule from "./modules/AttendanceModule";
 import CommunicationModule from "./modules/CommunicationModule";
 import DocumentsModule from "./modules/DocumentsModule";
 import FinanceModule from "./modules/FinanceModule";
+import TasksModule from "./modules/TasksModule";
 import SettingsModule from "./modules/SettingsModule";
 import AIAssistantModule from "./modules/AIAssistantModule";
 import { useAuth } from "@/contexts/AuthContext";
@@ -42,6 +43,7 @@ const Dashboard = () => {
         <Route path="/communication/*" element={<CommunicationModule />} />
         <Route path="/documents/*" element={<DocumentsModule />} />
         <Route path="/finance/*" element={<FinanceModule />} />
+        <Route path="/tasks/*" element={<TasksModule />} />
         <Route path="/settings/*" element={<SettingsModule />} />
         <Route path="/ai-assistant/*" element={<AIAssistantModule />} />
         <Route path="*" element={<DashboardHome />} />

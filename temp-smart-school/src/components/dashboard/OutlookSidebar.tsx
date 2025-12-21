@@ -34,6 +34,7 @@ const menuItems = [
   { icon: FileText, label: "Notes", href: "/dashboard/exams", badge: null, roles: ['direction', 'admin', 'teacher', 'parent'] },
   { icon: Clock, label: "Présence", href: "/dashboard/attendance", badge: "3", roles: ['direction', 'admin', 'teacher', 'parent'] },
   { icon: MessageSquare, label: "Messages", href: "/dashboard/communication", badge: "5", roles: ['direction', 'admin', 'teacher', 'parent'] },
+  { icon: LayoutDashboard, label: "Tâches", href: "/dashboard/tasks", badge: "2", roles: ['direction', 'admin', 'teacher'] },
   { icon: CreditCard, label: "Finance", href: "/dashboard/finance", badge: null, roles: ['direction', 'admin'] },
   { icon: FolderOpen, label: "Documents", href: "/dashboard/documents", badge: null, roles: ['direction', 'admin', 'teacher', 'parent'] },
   { icon: Settings, label: "Admin", href: "/dashboard/settings", badge: null, roles: ['direction', 'admin'] },
