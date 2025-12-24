@@ -53,6 +53,8 @@ const PatientDetailsPage = lazy(() => import("./pages/hospital/PatientDetailsPag
 const ClinicMap = lazy(() => import("./pages/resources/ClinicMap"));
 const PitchPage = lazy(() => import("./pages/PitchPage"));
 const SecretaryView = lazy(() => import("./pages/secretary/SecretaryView"));
+const TeamsPage = lazy(() => import("./pages/workspace/TeamsPage"));
+const WorkflowPage = lazy(() => import("./pages/workflow/WorkflowPage"));
 
 
 // Configure React Query with optimizations
@@ -92,6 +94,7 @@ const App = () => (
 
               {/* Core Hospital Modules */}
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/board" element={<ProtectedRoute><WorkflowPage /></ProtectedRoute>} />
               <Route path="/patients" element={<ProtectedRoute><PatientsPage /></ProtectedRoute>} />
               <Route path="/patients/:id" element={<ProtectedRoute><PatientDetailsPage /></ProtectedRoute>} />
 
@@ -100,6 +103,7 @@ const App = () => (
               <Route path="/staff" element={<ProtectedRoute><StaffPage /></ProtectedRoute>} />
               <Route path="/resources" element={<ProtectedRoute><BedManagementPage /></ProtectedRoute>} />
               <Route path="/resources/map" element={<ProtectedRoute><ClinicMap /></ProtectedRoute>} />
+              <Route path="/teams" element={<ProtectedRoute><TeamsPage /></ProtectedRoute>} />
               <Route path="/emr" element={<ProtectedRoute><PatientsPage /></ProtectedRoute>} />
               <Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
               <Route path="/reports" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />

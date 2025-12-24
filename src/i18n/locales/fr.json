@@ -21,9 +21,11 @@
     },
     "nav": {
         "dashboard": "Tableau de Bord",
+        "board": "Tableau (Kanban)",
         "patients": "Patients",
         "agenda": "Agenda",
         "secretary": "Secrétariat",
+        "teams": "Équipes",
         "staff": "Personnel",
         "resources": "Ressources",
         "billing": "Facturation",

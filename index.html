@@ -1,44 +1,48 @@
 <!doctype html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cloud Industrie - Solutions Cloud et Services Numériques</title>
-    <meta name="description" content="Cloud Industrie propose des solutions cloud innovantes, sécurisées et performantes pour votre entreprise. Infrastructure cloud, sécurité, stockage et plus encore." />
-    <meta name="author" content="Cloud Industrie" />
-    <meta name="theme-color" content="#2563eb" />
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/logo.png" />
-    <link rel="manifest" href="/manifest.json" />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Cloud Industrie - Solutions Cloud" />
-    <meta property="og:description" content="Solutions cloud innovantes pour votre entreprise" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/logo.png" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cloud Industrie - Solutions Cloud et Services Numériques</title>
+  <meta name="description"
+    content="Cloud Industrie propose des solutions cloud innovantes, sécurisées et performantes pour votre entreprise. Infrastructure cloud, sécurité, stockage et plus encore." />
+  <meta name="author" content="Cloud Industrie" />
+  <meta name="theme-color" content="#2563eb" />
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@CloudIndustrie" />
-    <meta name="twitter:image" content="/logo.png" />
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  </head>
+  <!-- Favicon -->
+  <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
+  <!-- <link rel="apple-touch-icon" href="/logo.png" /> -->
+  <link rel="manifest" href="/manifest.json" />
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js');
-        });
-      }
-    </script>
-  </body>
+  <!-- Open Graph -->
+  <meta property="og:title" content="Cloud Industrie - Solutions Cloud" />
+  <meta property="og:description" content="Solutions cloud innovantes pour votre entreprise" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/logo.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@CloudIndustrie" />
+  <meta name="twitter:image" content="/logo.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
+</body>
+
 </html>

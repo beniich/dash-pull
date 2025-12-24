@@ -1,9 +1,10 @@
-import { LayoutDashboard, Users, UserPlus, CalendarDays, BedDouble, Stethoscope, Receipt, BarChart3, Settings, ShieldCheck, Activity, TrendingUp, MessageSquare, ClipboardList } from "lucide-react";
+import { LayoutDashboard, Users, UserPlus, CalendarDays, BedDouble, Stethoscope, Receipt, BarChart3, Settings, ShieldCheck, Activity, TrendingUp, MessageSquare, ClipboardList, SquareKanban } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useBrandingStore } from "@/stores/useBrandingStore";
 import { useTranslation } from "react-i18next";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +22,8 @@ import {
 // Clés de navigation avec leurs clés de traduction
 const navigationItems = [
   { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { titleKey: "nav.board", url: "/board", icon: SquareKanban },
+  { titleKey: "nav.teams", url: "/teams", icon: Users },
   { titleKey: "nav.patients", url: "/patients", icon: Users },
   { titleKey: "nav.agenda", url: "/schedule", icon: CalendarDays },
   { titleKey: "nav.secretary", url: "/secretary", icon: ClipboardList },
@@ -45,22 +48,8 @@ export function DashboardSidebar() {
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border flex flex-col">
-      <div className="flex h-16 items-center justify-between px-6 border-b border-sidebar-border">
-        {state === "expanded" && (
-          <div className="flex items-center gap-2">
-            {logoUrl ? (
-              <img src={logoUrl} alt="Logo" className="h-8 w-8 rounded-lg object-cover" />
-            ) : iconUrl ? (
-              <img src={iconUrl} alt="Icon" className="h-8 w-8 rounded-lg object-cover" />
-            ) : (
-              <div className="h-8 w-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-sidebar-primary-foreground" />
-              </div>
-            )}
-            <span className="text-lg font-semibold text-sidebar-foreground">{appName}</span>
-          </div>
-        )}
-        <SidebarTrigger className="text-sidebar-foreground" />
+      <div className="p-2 border-b border-sidebar-border">
+        <WorkspaceSwitcher />
       </div>
 
       <SidebarContent className="flex-1">

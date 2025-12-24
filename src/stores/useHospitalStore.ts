@@ -14,6 +14,7 @@ export interface Patient {
     diagnosis: string;
     // Risk Score for prioritization
     riskScore?: 'low' | 'medium' | 'high' | 'critical';
+    workflowStepId?: string; // ID of the current workflow step
     // New Detailed Fields
     socialSecurityNumber?: string;
     phone?: string;

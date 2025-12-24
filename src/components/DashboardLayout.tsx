@@ -6,6 +6,8 @@ import { NotificationCenter } from "@/components/notifications/NotificationCente
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 
+import { useAutomation } from "@/hooks/useAutomation";
+
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -13,6 +15,8 @@ interface DashboardLayoutProps {
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   // Active le branding dynamique (titre page, favicon)
   useDynamicBranding();
+  // Start Automation Engine
+  useAutomation();
 
   return (
     <SidebarProvider>
