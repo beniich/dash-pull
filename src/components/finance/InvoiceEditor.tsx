@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,8 @@ interface InvoiceItem {
     unitPrice: number;
 }
 
+import { toast } from '@/hooks/use-toast';
+
 export const InvoiceEditor = () => {
     const [hospitalInfo] = useState({
         name: "Cloud Hôpital Center",
@@ -20,19 +22,36 @@ export const InvoiceEditor = () => {
         phone: "+33 1 23 45 67 89",
         email: "facturation@cloud-hopital.fr"
     });
-
-    const [patientInfo, setPatientInfo] = useState({
-        name: "Jean Dupont",
-        id: "PAT-2024-001",
-        address: "42 Rue des Fleurs, Lyon",
-        insurance: "Mutuelle Santé Plus"
-    });
-
     const [items, setItems] = useState<InvoiceItem[]>([
         { id: '1', description: 'Consultation Spécialiste (Cardiologie)', quantity: 1, unitPrice: 75.00 },
         { id: '2', description: 'Électrocardiogramme (ECG)', quantity: 1, unitPrice: 45.50 },
         { id: '3', description: 'Nuitée Hospitalisation (Chambre Simple)', quantity: 2, unitPrice: 150.00 },
     ]);
+
+    // Load saved items from localStorage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem('invoiceItems');
+        if (saved) {
+            try {
+                setItems(JSON.parse(saved));
+            } catch (e) {
+                console.error('Failed to parse saved invoice items', e);
+            }
+        }
+    }, []);
+
+    // Persist items to localStorage whenever they change
+    useEffect(() => {
+        localStorage.setItem('invoiceItems', JSON.stringify(items));
+    }, [items]);
+
+    const [patientInfo, setPatientInfo] = useState({
+        name: "Jean Dupont",
+        id: "PAT-2024-001",
+        address: "42 Rue des Fleurs, Lyon",
+        insurance: "Mutuelle Santé Plus",
+        email: "jean.dupont@example.com"
+    });
 
     const calculateTotal = () => {
         return items.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
@@ -43,11 +62,62 @@ export const InvoiceEditor = () => {
     };
 
     const updateItem = (id: string, field: keyof InvoiceItem, value: any) => {
+        // Handle NaN for number inputs to allow users to clear the input
+        if (field === 'quantity' || field === 'unitPrice') {
+            if (isNaN(value)) value = 0;
+        }
         setItems(items.map(item => item.id === id ? { ...item, [field]: value } : item));
+    };
+
+    const handleSave = () => {
+        // Persist current items to localStorage (already handled by effect) and show toast
+        toast({
+            title: "Facture enregistrée",
+            description: `Les modifications de la facture FAC-2024-892 ont été sauvegardées.`,
+            className: "bg-green-600 text-white"
+        });
+        console.log('Invoice items saved:', items);
     };
 
     const removeItem = (id: string) => {
         setItems(items.filter(item => item.id !== id));
+    };
+
+    const handlePay = async () => {
+        const total = calculateTotal();
+        try {
+            // Ensure backend URL is correct (usually port 5000 for local backend)
+            const res = await fetch('http://localhost:5000/api/invoices/pay', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    invoiceId: 'FAC-2024-892',
+                    patientEmail: patientInfo.email,
+                    total: total
+                })
+            });
+
+            if (res.ok) {
+                toast({
+                    title: "Paiement succès",
+                    description: `Confirmation envoyée à ${patientInfo.email}`,
+                    className: "bg-green-600 text-white"
+                });
+            } else {
+                toast({
+                    title: "Erreur",
+                    description: "Le paiement a échoué.",
+                    variant: "destructive"
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            toast({
+                title: "Erreur",
+                description: "Impossible de joindre le serveur de paiement.",
+                variant: "destructive"
+            });
+        }
     };
 
     return (
@@ -129,7 +199,7 @@ export const InvoiceEditor = () => {
                                 <TableCell className="text-center">
                                     <Input
                                         type="number"
-                                        value={item.quantity}
+                                        value={item.quantity || ''}
                                         onChange={(e) => updateItem(item.id, 'quantity', parseInt(e.target.value))}
                                         className="bg-transparent border-none p-0 h-auto focus:ring-0 text-center w-full"
                                     />
@@ -137,7 +207,7 @@ export const InvoiceEditor = () => {
                                 <TableCell className="text-right">
                                     <Input
                                         type="number"
-                                        value={item.unitPrice}
+                                        value={item.unitPrice || ''}
                                         onChange={(e) => updateItem(item.id, 'unitPrice', parseFloat(e.target.value))}
                                         className="bg-transparent border-none p-0 h-auto focus:ring-0 text-right w-full"
                                     />
@@ -195,7 +265,7 @@ export const InvoiceEditor = () => {
                     <h3 className="font-semibold flex items-center gap-2">
                         <Save className="h-4 w-4" /> Actions
                     </h3>
-                    <Button className="w-full gap-2 bg-primary hover:bg-primary/90">
+                    <Button className="w-full gap-2 bg-primary hover:bg-primary/90" onClick={handleSave}>
                         <Save className="h-4 w-4" /> Enregistrer les modifs
                     </Button>
                     <Button variant="outline" className="w-full gap-2">
@@ -213,7 +283,7 @@ export const InvoiceEditor = () => {
                     <div className="text-sm text-muted-foreground mb-2">
                         Statut actuel: <span className="text-yellow-500 font-medium">En attente</span>
                     </div>
-                    <Button className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white">
+                    <Button className="w-full gap-2 bg-green-600 hover:bg-green-700 text-white" onClick={handlePay}>
                         Encaisser le paiement
                     </Button>
                     <Button variant="ghost" className="w-full text-xs">

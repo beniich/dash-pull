@@ -8,9 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StaffSchedule } from "@/components/hospital/StaffSchedule";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { StaffForm } from "@/components/hospital/StaffForm";
+import { StaffDetailsSheet } from "@/components/hospital/StaffDetailsSheet";
+import { LeaveRequestsManager } from "@/components/hospital/LeaveRequestsManager";
 import { useHospitalStore } from "@/stores/useHospitalStore";
 
 // ... imports
+import { Pencil } from "lucide-react";
 
 // Remove local interface Staff and mockStaff
 // ...
@@ -18,9 +21,11 @@ import { useHospitalStore } from "@/stores/useHospitalStore";
 const StaffPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [filter, setFilter] = useState<'all' | 'on_duty'>('all');
+    const [editingStaff, setEditingStaff] = useState<any>(null); // State for the staff being edited
+    const [viewingStaff, setViewingStaff] = useState<any>(null); // State for the staff being viewed in HR Sheet
 
     // Connect to store
-    const staff = useHospitalStore((state) => state.staff);
+    const { staff, removeStaff } = useHospitalStore();
 
     const filteredStaff = staff.filter(member => {
         const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -47,6 +52,23 @@ const StaffPage = () => {
                                 <TabsTrigger value="directory" className="gap-2"><Users className="h-4 w-4" /> Annuaire</TabsTrigger>
                                 <TabsTrigger value="planning" className="gap-2"><CalendarClock className="h-4 w-4" /> Planning</TabsTrigger>
                             </TabsList>
+
+                            {/* Staff Details Sheet */}
+                            <StaffDetailsSheet
+                                staff={viewingStaff}
+                                isOpen={!!viewingStaff}
+                                onClose={() => setViewingStaff(null)}
+                            />
+
+                            <Dialog open={!!editingStaff} onOpenChange={(open) => !open && setEditingStaff(null)}>
+                                <DialogContent>
+                                    <StaffForm
+                                        defaultValues={editingStaff}
+                                        onSuccess={() => setEditingStaff(null)}
+                                    />
+                                </DialogContent>
+                            </Dialog>
+
                             <Dialog>
                                 <DialogTrigger asChild>
                                     <Button className="gap-2 shadow-lg shadow-primary/20">
@@ -82,13 +104,31 @@ const StaffPage = () => {
                         {/* Staff Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {filteredStaff.map((staff) => (
-                                <StaffCard key={staff.id} data={staff} />
+                                <StaffCard
+                                    key={staff.id}
+                                    data={staff}
+                                    onEdit={() => setEditingStaff(staff)}
+                                    onClick={() => setViewingStaff(staff)}
+                                    onDelete={() => {
+                                        if (window.confirm('Voulez-vous vraiment supprimer ce membre ?')) {
+                                            removeStaff(staff.id);
+                                        }
+                                    }}
+                                />
                             ))}
                         </div>
                     </TabsContent>
 
-                    <TabsContent value="planning" className="animate-fade-in">
-                        <StaffSchedule />
+                    <TabsContent value="planning" className="animate-fade-in space-y-6">
+                        <div className="mb-6">
+                            <h2 className="text-xl font-semibold mb-2">Gestion des Congés</h2>
+                            <p className="text-muted-foreground text-sm">Validez ou refusez les demandes de congés de votre équipe</p>
+                        </div>
+                        <LeaveRequestsManager />
+                        <div className="mt-8">
+                            <h2 className="text-xl font-semibold mb-4">Planning des Gardes</h2>
+                            <StaffSchedule />
+                        </div>
                     </TabsContent>
                 </Tabs>
             </div>

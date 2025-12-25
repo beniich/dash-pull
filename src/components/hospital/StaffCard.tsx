@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Mail, Stethoscope, Clock, Shield } from "lucide-react";
+import { Phone, Mail, Stethoscope, Clock, Shield, Pencil, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface StaffCardProps {
     data: {
@@ -13,10 +14,14 @@ interface StaffCardProps {
         email: string;
         phone: string;
         avatar?: string;
+
     };
+    onEdit?: () => void;
+    onDelete?: () => void;
+    onClick?: () => void;
 }
 
-export const StaffCard = ({ data }: StaffCardProps) => {
+export const StaffCard = ({ data, onEdit, onDelete, onClick }: StaffCardProps) => {
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'on_duty': return 'bg-green-500/10 text-green-700 border-green-200';
@@ -34,9 +39,15 @@ export const StaffCard = ({ data }: StaffCardProps) => {
     };
 
     return (
-        <Card className="glass-card p-0 overflow-hidden group hover:shadow-lg transition-all duration-300">
+        <Card
+            className="glass-card p-0 overflow-hidden group hover:shadow-lg transition-all duration-300 cursor-pointer"
+            onClick={onClick}
+        >
             <div className="h-24 bg-gradient-to-r from-primary/20 to-secondary/20 relative">
-                <div className="absolute top-3 right-3">
+                <div className="absolute top-3 right-3 flex gap-2" onClick={(e) => e.stopPropagation()}>
+                    <Button variant="ghost" size="icon" className="h-6 w-6 bg-white/50 hover:bg-white" onClick={onEdit}>
+                        <Pencil className="h-3 w-3" />
+                    </Button>
                     <Badge variant="outline" className={`bg-white/50 backdrop-blur-sm border-0 ${getStatusColor(data.status)}`}>
                         {getStatusLabel(data.status)}
                     </Badge>

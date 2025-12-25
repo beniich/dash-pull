@@ -1,87 +1,73 @@
-# Cloud Industrie CRM
+# React + TypeScript + Vite
 
-Application CRM et Solutions Cloud pour entreprises.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## 🚀 Fonctionnalités
+Currently, two official plugins are available:
 
-- **Dashboard** - Tableau de bord personnalisable avec statistiques en temps réel
-- **CRM** - Gestion des clients, contacts et entreprises
-- **Deals Pipeline** - Suivi des opportunités commerciales
-- **Analytics** - Analyses et rapports détaillés
-- **Tâches** - Gestion des tâches et workflows
-- **Produits** - Catalogue de produits cloud
-- **AI Assistant** - Assistant IA pour recommandations
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## 🛠 Technologies
+## React Compiler
 
-- **Frontend**: React 18, TypeScript, Vite
-- **UI**: Tailwind CSS, Shadcn/ui, Radix UI
-- **State**: Zustand, React Query
-- **Charts**: Recharts
-- **Animations**: Framer Motion
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## 📦 Installation
+## Expanding the ESLint configuration
 
-```bash
-# Cloner le repo
-git clone [url-du-repo]
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-# Installer les dépendances
-npm install
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-# Lancer en développement
-npm run dev
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-## 🔧 Mode Local
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-Cette application fonctionne en mode **100% local** avec stockage localStorage.
-Aucune connexion à un backend externe n'est requise.
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-### Compte démo
-
-Pour tester l'application, utilisez n'importe quel email/mot de passe.
-L'application accepte toutes les connexions en mode démo.
-
-## 📂 Structure du projet
-
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-src/
-├── components/     # Composants React réutilisables
-├── pages/          # Pages de l'application
-├── providers/      # Context providers (Auth)
-├── store/          # État global (Zustand)
-├── lib/            # Utilitaires et données mock
-├── hooks/          # Custom React hooks
-└── integrations/   # Client mock (remplace Supabase)
-```
-
-## 🌐 Routes
-
-### Publiques
-- `/` - Page d'accueil
-- `/services` - Nos services
-- `/about` - À propos
-- `/contact` - Contact
-- `/pricing` - Tarifs
-- `/products` - Catalogue produits
-- `/auth` - Connexion/Inscription
-
-### Protégées (nécessitent connexion)
-- `/dashboard` - Tableau de bord
-- `/crm` - CRM principal
-- `/clients` - Liste des clients
-- `/deals` - Pipeline des deals
-- `/analytics` - Analytics
-- `/tasks` - Gestion des tâches
-- `/settings` - Paramètres
-- `/ai-assistant` - Assistant IA
-
-## 🎨 Personnalisation
-
-L'application utilise un système de thème personnalisable via Tailwind CSS.
-Les variables de couleur sont définies dans `tailwind.config.ts`.
-
-## 📝 Licence
-
-© 2024 Cloud Industrie. Tous droits réservés.
