@@ -111,7 +111,7 @@ const App = () => (
               <Route path="/secretary" element={<ProtectedRoute><SecretaryView /></ProtectedRoute>} />
 
               {/* Protected routes - Multi-tenant isolated */}
-              <Route path="/crm" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/crm" element={<Index />} />
               <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} /> {/* PROMPT 5 */}
               <Route path="/clients" element={<ProtectedRoute><Companies /></ProtectedRoute>} />
               <Route path="/companies" element={<ProtectedRoute><Companies /></ProtectedRoute>} />
